@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TouchableWithoutFeedback, Keyboard /* include other react native components here as needed */ } from 'react-native';
-import { useStocksContext } from '../contexts/StocksContext';
-import { scaleSize } from '../constants/Layout';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard /* include other react native components here as needed */,
+} from "react-native";
+import { useStocksContext } from "../contexts/StocksContext";
+import { scaleSize } from "../constants/Layout";
+import { Ionicons } from "@expo/vector-icons";
 
 // FixMe: implement other components and functions used in SearchScreen here (don't just put all the JSX in SearchScreen below)
 
-
-
-
-
-
+import Search from "../components/Search";
 
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist } = useStocksContext();
-  const [state, setState] = useState({ /* FixMe: initial state here */ });
+  const [state, setState] = useState({
+    /* FixMe: initial state here */
+  });
 
   // can put more code here
 
@@ -25,13 +28,14 @@ export default function SearchScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        {/* FixMe: add children here! */ }
+        {/* FixMe: add children here! */}
+        <Search />
       </View>
-    </TouchableWithoutFeedback>    
-  )
+    </TouchableWithoutFeedback>
+  );
 }
 
 const styles = StyleSheet.create({
-// FixMe: add styles here ...
-// use scaleSize(x) to adjust sizes for small/large screens
+  // FixMe: add styles here ...
+  // use scaleSize(x) to adjust sizes for small/large screens
 });

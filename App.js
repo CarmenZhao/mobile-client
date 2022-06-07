@@ -15,9 +15,11 @@ export default function App(props) {
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <NavigationContainer theme={DarkTheme}>
           <Stack.Navigator>
-            <Stack.Screen name="Home" component={BottomTabNavigator} />
-            <p>Hello Carmen!</p>
-            <p>Hello Clara!</p>
+            <Stack.Screen
+              name="Home"
+              component={BottomTabNavigator}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </StocksProvider>
