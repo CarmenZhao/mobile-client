@@ -2,40 +2,120 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
+  Text,
+  FlatList,
+  SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard /* include other react native components here as needed */,
 } from "react-native";
 import { useStocksContext } from "../contexts/StocksContext";
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-// FixMe: implement other components and functions used in SearchScreen here (don't just put all the JSX in SearchScreen below)
-
-import Search from "../components/Search";
+import { useStockAPI } from "../api";
+import SearchBar from "../components/SearchBar";
 
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist } = useStocksContext();
-  const [state, setState] = useState({
-    /* FixMe: initial state here */
-  });
+  const { loading, stockData, error } = useStockAPI();
+  // const [state, setState] = useState({
+  //   /* FixMe: initial state here */
+  // });
+  const [stockList, setStockList] = useState([]);
+  const [searchPhrase, setSearchPhrase] = useState("");
+  const [clicked, setClicked] = useState(false);
 
   // can put more code here
 
   useEffect(() => {
     // FixMe: fetch symbol names from the server and save in local SearchScreen state
-  }, []);
+    setStockList(stockData);
+  }, [stockData]);
+
+  // function ShowStockList() {
+  //   console.log(stockList);
+  //   return (
+  //     <View>
+  //       {stockList.map((e) => (
+  //         <Text style={styles.display}>
+  //           {e.symbol} {e.name}
+  //         </Text>
+  //       ))}
+  //     </View>
+  //   );
+  // }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        {/* FixMe: add children here! */}
-        <Search />
-      </View>
+      <SafeAreaView style={styles.root}>
+        {!clicked && <Text style={styles.title}>Stocks</Text>}
+
+        <SearchBar
+          searchPhrase={searchPhrase}
+          setSearchPhrase={setSearchPhrase}
+          clicked={clicked}
+          setClicked={setClicked}
+        />
+        {!stockList ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <List
+            searchPhrase={searchPhrase}
+            data={stockList}
+            setClicked={setClicked}
+          />
+        )}
+      </SafeAreaView>
     </TouchableWithoutFeedback>
   );
 }
 
+function Entry(props) {
+  return (
+    <View>
+      <Text style={styles.symbol}>{props.symbol}</Text>
+      <Text style={styles.name}>{props.name}</Text>
+    </View>
+  );
+}
+
+function FilterList(props) {
+  const renderItem = () => {
+    // when no input, show all
+    if (searchPhrase === "") {
+      return <Item name={item.name} details={item.details} />;
+    }
+  };
+}
+
+// use scaleSize(x) to adjust sizes for small/large screens
 const styles = StyleSheet.create({
-  // FixMe: add styles here ...
-  // use scaleSize(x) to adjust sizes for small/large screens
+  root: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    width: "100%",
+    marginTop: 20,
+    fontSize: 25,
+    fontWeight: "bold",
+    marginLeft: "10%",
+  },
+  list__container: {
+    margin: 10,
+    height: "85%",
+    width: "100%",
+  },
+  name: {
+    margin: 30,
+    borderBottomWidth: 2,
+    borderBottomColor: "lightgrey",
+  },
+  symbol: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 5,
+    fontStyle: "italic",
+  },
 });
