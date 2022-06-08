@@ -6,10 +6,10 @@ const API_KEY = "c00387c449baaad2b88dea5822bed61e";
 
 //This function return the list of company name and symbol
 //use in the search bar drop down
-export function SstOptionData() {
+export function useStockAPI() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [rowData, setRowData] = useState([]);
+  const [stockData, setstockData] = useState([]);
 
   async function fetchInfo() {
     let res = await fetch(
@@ -28,12 +28,12 @@ export function SstOptionData() {
   useEffect(() => {
     (async () => {
       try {
-        setRowData(await fetchInfo());
+        setstockData(await fetchInfo());
         setLoading(false);
       } catch (err) {
         setError(err);
       }
     })();
   }, []);
-  return { loading, rowData, error };
+  return { loading, stockData, error };
 }
