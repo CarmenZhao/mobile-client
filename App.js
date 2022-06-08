@@ -20,6 +20,7 @@ export default function App(props) {
               component={BottomTabNavigator}
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="New" component={BottomTabNavigator} />
           </Stack.Navigator>
         </NavigationContainer>
       </StocksProvider>

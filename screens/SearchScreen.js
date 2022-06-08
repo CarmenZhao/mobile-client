@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useStockAPI } from "../api";
+import StockList from "../components/StockList";
 import SearchBar from "../components/SearchBar";
 
 export default function SearchScreen({ navigation }) {
@@ -22,7 +23,7 @@ export default function SearchScreen({ navigation }) {
   // const [state, setState] = useState({
   //   /* FixMe: initial state here */
   // });
-  const [stockList, setStockList] = useState([]);
+  const [stockList, setStockList] = useState();
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
 
@@ -57,15 +58,6 @@ export default function SearchScreen({ navigation }) {
           clicked={clicked}
           setClicked={setClicked}
         />
-        {!stockList ? (
-          <ActivityIndicator size="large" />
-        ) : (
-          <List
-            searchPhrase={searchPhrase}
-            data={stockList}
-            setClicked={setClicked}
-          />
-        )}
       </SafeAreaView>
     </TouchableWithoutFeedback>
   );
@@ -81,12 +73,10 @@ function Entry(props) {
 }
 
 function FilterList(props) {
-  const renderItem = () => {
-    // when no input, show all
-    if (searchPhrase === "") {
-      return <Item name={item.name} details={item.details} />;
-    }
-  };
+  // when no input, show all
+  if (props.searchPhrase === "") {
+    return <Item name={item.name} details={item.details} />;
+  }
 }
 
 // use scaleSize(x) to adjust sizes for small/large screens
@@ -101,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: "bold",
     marginLeft: "10%",
+    color: "white",
   },
   list__container: {
     margin: 10,
