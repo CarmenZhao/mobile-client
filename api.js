@@ -17,13 +17,12 @@ export function useStockAPI() {
     );
     let data = await res.json();
     // console.log(data);
-    // return data.map((company) => {
-    //   return {
-    //     symbol: company.symbol,
-    //     name: company.name,
-    //   };
-    // });
-    return data;
+    return data.map((company) => {
+      return {
+        symbol: company.symbol,
+        name: company.name,
+      };
+    });
   }
 
   useEffect(() => {

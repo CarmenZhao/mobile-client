@@ -12,7 +12,6 @@ const Stack = createStackNavigator();
 export default function App(props) {
   return (
     <View style={styles.container}>
-      <Example />
       <StocksProvider>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <NavigationContainer theme={DarkTheme}>
@@ -22,7 +21,7 @@ export default function App(props) {
               component={BottomTabNavigator}
               options={{ headerShown: false }}
             />
-            <Stack.Screen name="New" component={BottomTabNavigator} />
+            <Stack.Screen name="New" component={Example} />
           </Stack.Navigator>
         </NavigationContainer>
       </StocksProvider>
