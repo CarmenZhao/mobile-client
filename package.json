@@ -23,7 +23,8 @@
     "react-native-gesture-handler": "~2.1.0",
     "react-native-reanimated": "^2.8.0",
     "react-native-screens": "^3.13.1",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "react-spring-bottom-sheet": "^3.4.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
