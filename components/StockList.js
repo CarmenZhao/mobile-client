@@ -1,22 +1,34 @@
 import React from "react";
 import { StyleSheet, Text, View, FlatList, SafeAreaView } from "react-native";
+import { useStocksContext } from "../contexts/StocksContext";
 
 // definition of the Item, which will be rendered in the FlatList
-const Item = ({ symbol, name }) => (
-  <View style={styles.item}>
-    <Text style={styles.symbol}>{symbol}</Text>
-    <Text style={styles.name}>{name}</Text>
-  </View>
-);
+const Item = ({ symbol, name }) => {
+  const { addToWatchlist } = useStocksContext();
+  return (
+    <View style={styles.item}>
+      <Text
+        style={styles.symbol}
+        onPress={() => {
+          addToWatchlist(symbol);
+          console.log("pressed");
+        }}
+      >
+        {symbol}
+      </Text>
+      <Text style={styles.name}>{name}</Text>
+    </View>
+  );
+};
 
 // the filter
 const StockList = (props) => {
   const renderItem = ({ item }) => {
     // when no input, show all
     if (props.searchPhrase === "") {
-      return <Item symbol={item.symbol} name={item.name} />;
+      return <Item symbol={item.symbol} name={item.name} />; //onPress
     }
-    // filter of the name
+    // filter of the symbol
     if (
       item.symbol
         .toUpperCase()
@@ -44,7 +56,7 @@ const StockList = (props) => {
         <FlatList
           data={props.data}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.symbol}
         />
       </View>
     </SafeAreaView>
@@ -56,7 +68,7 @@ export default StockList;
 const styles = StyleSheet.create({
   list__container: {
     margin: 10,
-    height: "85%",
+    //height: "85%",
     width: "100%",
   },
   name: {

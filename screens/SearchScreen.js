@@ -43,26 +43,28 @@ export default function SearchScreen({ navigation }) {
     //     ))}
     //   </View>
     // </TouchableWithoutFeedback>
-    <SafeAreaView style={styles.root}>
-      {!clicked && <Text style={styles.title}>Stocks</Text>}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.root}>
+        {!clicked && <Text style={styles.title}>Stocks</Text>}
 
-      <SearchBar
-        searchPhrase={searchPhrase}
-        setSearchPhrase={setSearchPhrase}
-        clicked={clicked}
-        setClicked={setClicked}
-      />
-
-      {!state ? (
-        <ActivityIndicator size="large" />
-      ) : (
-        <StockList
+        <SearchBar
           searchPhrase={searchPhrase}
-          data={state}
+          setSearchPhrase={setSearchPhrase}
+          clicked={clicked}
           setClicked={setClicked}
         />
-      )}
-    </SafeAreaView>
+
+        {!state ? (
+          <ActivityIndicator size="large" />
+        ) : (
+          <StockList
+            searchPhrase={searchPhrase}
+            data={state}
+            setClicked={setClicked}
+          />
+        )}
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
