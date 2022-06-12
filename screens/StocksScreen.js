@@ -55,6 +55,8 @@ import { useStocksContext } from "../contexts/StocksContext";
 import { scaleSize } from "../constants/Layout";
 import { ScrollView } from "react-native-gesture-handler";
 
+import StockDetailScreen from "./DetailScreen";
+
 // FixMe: implement other components and functions used in StocksScreen here (don't just put all the JSX in StocksScreen below)
 
 export default function StocksScreen({ route }) {
@@ -74,9 +76,9 @@ export default function StocksScreen({ route }) {
     <View style={styles.container}>
       <View style={styles.stockList}>
         <ScrollView>
-          {watchList.map((symbol) => (
+          {myList.map((symbol) => (
             //<View key={symbol}>
-            <View style={styles.stockItem}>
+            <View style={styles.stockItem} key={symbol}>
               <Text
                 style={styles.symbol}
                 onPress={() => {

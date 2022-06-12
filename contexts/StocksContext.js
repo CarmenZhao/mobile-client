@@ -109,7 +109,7 @@ export const StocksProvider = ({ children }) => {
     let index = state.indexOf(symbol);
     // console.log(index);
     if (index !== -1) {
-      let newState = state;
+      let newState = [...state];
       newState.splice(index, 1);
       setState(newState);
     }
