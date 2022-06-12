@@ -4,14 +4,17 @@ import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
 import { StocksProvider } from "./contexts/StocksContext";
+import StockDetailScreen from "./screens/DetailScreen";
 
 import "react-native-gesture-handler";
 
 const Stack = createStackNavigator();
 
 export default function App(props) {
+  const testSymbol = "AAPL";
   return (
     <View style={styles.container}>
+      <StockDetailScreen Symbol={testSymbol} />
       <StocksProvider>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <NavigationContainer theme={DarkTheme}>
