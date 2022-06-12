@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard /* include other react native components here as needed */,
 } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { useStocksContext } from "../contexts/StocksContext";
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,10 +44,10 @@ export default function SearchScreen({ navigation }) {
     //     ))}
     //   </View>
     // </TouchableWithoutFeedback>
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    //<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <SafeAreaView style={styles.root}>
         {!clicked && <Text style={styles.title}>Stocks</Text>}
-
+        <Text style={styles.hintText}>Type a stock symbol or company name</Text>
         <SearchBar
           searchPhrase={searchPhrase}
           setSearchPhrase={setSearchPhrase}
@@ -64,7 +65,7 @@ export default function SearchScreen({ navigation }) {
           />
         )}
       </SafeAreaView>
-    </TouchableWithoutFeedback>
+    //</TouchableWithoutFeedback>
   );
 }
 
@@ -81,4 +82,9 @@ const styles = StyleSheet.create({
     marginLeft: "10%",
     color: "white",
   },
+  hintText:{
+    color:"white",
+    textAlign:"center",
+    marginVertical:scaleSize(5)
+  }
 });

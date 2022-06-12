@@ -10,15 +10,35 @@ export const StocksProvider = ({ children }) => {
   function addToWatchlist(newSymbol) {
     //FixMe: add the new symbol to the watchlist, save it in useStockContext state and persist to AsyncStorage
     const oldState = state ?? [];
-    setState((x) => {
-      console.log(newSymbol);
-      return [...x, newSymbol];
-    });
 
-    AsyncStorage.setItem(
-      "@Watchlist",
-      JSON.stringify([...oldState, newSymbol])
-    );
+    // setState((x) => {
+    //   console.log(newSymbol);
+    //   return [...x, newSymbol];
+    // });
+    if (!state.includes(newSymbol)) {
+      setState((x) => {
+        console.log(newSymbol);
+        return [...x, newSymbol];
+      });
+
+      AsyncStorage.setItem(
+        "@Watchlist",
+        JSON.stringify([...oldState, newSymbol])
+      );
+    } else {
+      console.log("This symbol already in the watchlist");
+      //notify users
+    }
+  }
+
+  function removeFromWatchlist(symbol) {
+    // let index = state.indexOf(symbol);
+    // console.log(index);
+    // if (index !== -1) {
+    //   setState(() => state.splice(index, 1));
+    //   const newState = state ?? [];
+    //   AsyncStorage.setItem("@Watchlist", JSON.stringify(newState));
+    // }
   }
 
   let _retrieveData = async () => {
@@ -44,6 +64,7 @@ export const StocksProvider = ({ children }) => {
         ServerURL: "http://131.181.190.87:3001",
         watchList: state,
         addToWatchlist,
+        removeFromWatchlist,
       }}
     >
       {children}
