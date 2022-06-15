@@ -80,6 +80,26 @@ export const useStocksContext = () => useContext(StocksContext);
 
 export const StocksProvider = ({ children }) => {
   const [state, setState] = useState([]);
+  const [loginUser, setLoginUser] = useState();
+  const ServerURL = "http://localhost:3000";
+
+  // async function updateDatabase({ payload }) {
+  //   const url = `${ServerURL}/users/watchlist`;
+  //   console.log(payload);
+  //   let res = await fetch(url, {
+  //     method: "POST",
+  //     headers: {
+  //       accept: "application/json",
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       email: loginUser,
+  //       newWatchlist: payload,
+  //     }),
+  //   });
+  //   let data = await res.json();
+  //   console.log(data);
+  // }
 
   function addToWatchlist(newSymbol) {
     //FixMe: add the new symbol to the watchlist, save it in useStockContext state and persist to AsyncStorage
@@ -96,9 +116,31 @@ export const StocksProvider = ({ children }) => {
       });
 
       AsyncStorage.setItem(
-        "@Watchlist",
+        "watchlist",
         JSON.stringify([...oldState, newSymbol])
       );
+
+      let payload = [...oldState, newSymbol];
+      payload = JSON.stringify(payload);
+      //console.log(payload);
+
+      async () => {
+        const url = `${ServerURL}/users/watchlist`;
+        console.log(payload);
+        let res = await fetch(url, {
+          method: "POST",
+          headers: {
+            accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: loginUser,
+            newWatchlist: payload,
+          }),
+        });
+        let data = await res.json();
+        console.log(data);
+      };
     } else {
       console.log("This symbol already in the watchlist");
       //notify users
@@ -117,13 +159,13 @@ export const StocksProvider = ({ children }) => {
     //state.map((x) => console.log(x));
     //AsyncStorage.setItem("@Watchlist", JSON.stringify(newState));
     try {
-      const value = await AsyncStorage.getItem("@Watchlist");
+      const value = await AsyncStorage.getItem("watchlist");
       if (value !== null) {
         let values = JSON.parse(value);
         let index = values.indexOf(symbol);
         if (index !== -1) {
           values.splice(index, 1);
-          AsyncStorage.setItem("@Watchlist", JSON.stringify(values));
+          AsyncStorage.setItem("watchlist", JSON.stringify(values));
         }
         //values.map((e) => console.log(e));
       }
@@ -135,9 +177,22 @@ export const StocksProvider = ({ children }) => {
 
   let _retrieveData = async () => {
     try {
-      const value = await AsyncStorage.getItem("@Watchlist");
+      const value = await AsyncStorage.getItem("watchlist");
       if (value !== null) {
-        setState(JSON.parse(value));
+        let loginUserWatchlist = value.split(",");
+        setState(loginUserWatchlist);
+        //m.map((e) => console.log(e));
+        //setState(JSON.parse(value));
+      }
+    } catch (error) {
+      console.log(error);
+      // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
+    }
+
+    try {
+      const value = await AsyncStorage.getItem("loginuser");
+      if (value !== null) {
+        setLoginUser(value);
       }
     } catch (error) {
       console.log(error);
@@ -153,7 +208,7 @@ export const StocksProvider = ({ children }) => {
   return (
     <StocksContext.Provider
       value={{
-        ServerURL: "http://131.181.190.87:3001",
+        ServerURL: "http://localhost:3000",
         watchList: state,
         addToWatchlist,
         removeFromWatchlist,

@@ -126,6 +126,7 @@ export default function SearchScreen({ navigation }) {
 
   useEffect(() => {
     // FixMe: fetch symbol names from the server and save in local SearchScreen state
+
     setAllStocks(stockData);
     setFilteredStocks(stockData);
   }, [stockData]);

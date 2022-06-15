@@ -16,6 +16,7 @@ export function useStockAPI() {
       `https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey=${API_KEY}`
     );
     let data = await res.json();
+    console.log("request stock api");
     // console.log(data);
     return data.map((company) => {
       return {
