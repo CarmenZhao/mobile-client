@@ -4,7 +4,7 @@ import { Platform, StyleSheet, View, StatusBar } from "react-native";
 import { NavigationContainer, DarkTheme } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomTabNavigator from "./navigation/BottomTabNavigator";
-import { StocksProvider } from "./contexts/StocksContext";
+import { StocksProvider, useStocksContext } from "./contexts/StocksContext";
 import StockDetailScreen from "./screens/DetailScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
@@ -16,17 +16,20 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const testSymbol = "AAPL";
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [initialRoute, setInitialRoute] = useState();
   let _retrieveToken = async () => {
     try {
       const value = await AsyncStorage.getItem("token");
       if (value == undefined || value == null) {
         setIsLoggedIn(false);
+        setInitialRoute("Login");
         console.log("landing1");
       } else {
         setIsLoggedIn(true);
+        setInitialRoute("Home");
         console.log(value);
+        console.log("landing2");
       }
     } catch (error) {
       console.log(error);
@@ -38,6 +41,7 @@ export default function App() {
     try {
       const keys = await AsyncStorage.getAllKeys();
       await AsyncStorage.multiRemove(keys);
+      console.log("clear storage");
     } catch (error) {
       console.error("Error clearing app data.");
     }
@@ -46,8 +50,8 @@ export default function App() {
   useEffect(() => {
     // FixMe: Retrieve watchlist from persistent storage
     //clearAppData();
-    //console.log("hey");
-    //_retrieveToken();
+    console.log("hey");
+    _retrieveToken();
   }, []);
 
   return (
@@ -57,15 +61,25 @@ export default function App() {
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <NavigationContainer theme={DarkTheme}>
           {isLoggedIn ? (
-            <Stack.Navigator>
+            <Stack.Navigator initialRouteName={initialRoute}>
               <Stack.Screen
                 name="Home"
                 component={BottomTabNavigator}
                 options={{ headerShown: false }}
               />
+              <Stack.Screen
+                name="Login"
+                component={LoginScreen}
+                //options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Register"
+                component={RegisterScreen}
+                //options={{ headerShown: false }}
+              />
             </Stack.Navigator>
           ) : (
-            <Stack.Navigator initialRouteName="Login">
+            <Stack.Navigator initialRouteName={initialRoute}>
               <Stack.Screen
                 name="Home"
                 component={BottomTabNavigator}

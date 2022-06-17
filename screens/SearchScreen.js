@@ -90,25 +90,22 @@
 // });
 
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard /* include other react native components here as needed */,
-  Button,
-} from "react-native";
+import { StyleSheet, View, Text, Button } from "react-native";
 
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
 
 import { useStocksContext } from "../contexts/StocksContext";
 import { useStockAPI } from "../api";
 import SearchBar from "../components/SearchBar";
 
 // FixMe: implement other components and functions used in SearchScreen here (don't just put all the JSX in SearchScreen below)
+
+function FilterStock(text) {
+  let temp = allStocks.filter((stock) => RegExp(text, "i").test(stock.symbol));
+  setFilteredStocks(temp);
+}
 
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist, watchList } = useStocksContext();
@@ -117,22 +114,13 @@ export default function SearchScreen({ navigation }) {
   const [allStocks, setAllStocks] = useState([]); //all stocks from api
   const [filteredStocks, setFilteredStocks] = useState([]); //stock filtered by user input
 
-  function FilterStock(text) {
-    let temp = allStocks.filter((stock) =>
-      RegExp(text, "i").test(stock.symbol)
-    );
-    setFilteredStocks(temp);
-  }
-
   useEffect(() => {
     // FixMe: fetch symbol names from the server and save in local SearchScreen state
-
     setAllStocks(stockData);
     setFilteredStocks(stockData);
   }, [stockData]);
 
   return (
-    //<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
     <View style={styles.container}>
       <SearchBar defaultText={searchText} handleSearch={FilterStock} />
       <ScrollView>
@@ -153,7 +141,6 @@ export default function SearchScreen({ navigation }) {
         ))}
       </ScrollView>
     </View>
-    //</TouchableWithoutFeedback>
   );
 }
 

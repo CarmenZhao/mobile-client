@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard /* include other react native components here as needed */,
-  Button,
-} from "react-native";
+import { StyleSheet, View, Button } from "react-native";
 
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
-import { TextInput, ScrollView } from "react-native-gesture-handler";
+import { TextInput } from "react-native-gesture-handler";
 
 import { useStocksContext } from "../contexts/StocksContext";
 import { useStockAPI } from "../api";
@@ -20,12 +12,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegisterScreen({ navigation }) {
   const { ServerURL } = useStocksContext();
-  const [userEmail, setUserEmail] = useState(null);
-  const [userPassword, setUserPassword] = useState(null);
+  const [inputUserEmail, setInputUserEmail] = useState(null);
+  const [inputUserPassword, setInputUserPassword] = useState(null);
 
+  //request back-end to register a new user
   async function register() {
     const url = `${ServerURL}/users/register`;
-
     let res = await fetch(url, {
       method: "POST",
       headers: {
@@ -33,36 +25,32 @@ export default function RegisterScreen({ navigation }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        // email: "carmen.zhao1027@gmail.com",
-        // password: "102Zjm",
-        email: userEmail,
-        password: userPassword,
+        email: inputUserEmail,
+        password: inputUserPassword,
       }),
     });
     let data = await res.json();
     console.log(data.error);
-    if (data.hasOwnProperty("error") && data.error != true) {
-      //AsyncStorage.setItem("token", data.token);
+    if (data.error != true) {
       console.log(data);
-      navigation.navigate("Login");
+      navigation.navigate("Login"); //redirect to login screen after successful registration
     } else {
       console.log("failed");
+      //need error handling
     }
   }
   return (
-    // <div className="App">
-    //   <h1>JWT Token example</h1>
-    //   <button onClick={login}>Login</button>
-    // </div>
     <View>
       <TextInput
         style={styles.display}
-        onChangeText={setUserEmail}
+        onChangeText={setInputUserEmail}
+        value={inputUserEmail}
         placeholder="Email"
       />
       <TextInput
         style={styles.display}
-        onChangeText={setUserPassword}
+        onChangeText={setInputUserPassword}
+        value={inputUserPassword}
         placeholder="Password"
       />
       <Button title="Sign Up" onPress={register} />

@@ -12,25 +12,25 @@ import ComDetails from "../components/ComDetails";
 import InfoChart from "../components/Chart";
 
 export default function StockDetailScreen(props) {
-  console.log(props.Symbol);
-  console.log(props.Open);
+  //console.log(props.Symbol);
+  //console.log(props.Open);
 
   const [open, setOpen] = useState(false);
   const { loading, rowData, compData, error } = UseStockData(props.Symbol);
-  console.log(rowData);
+  //console.log(rowData);
   function onDismiss() {
     setOpen(false);
   }
   if (loading) {
-    console.log("1");
+    //console.log("1");
     return <Text>loading</Text>;
   }
   if (error != null) {
-    console.log("2");
+    //console.log("2");
     return <Text>Error</Text>;
   }
 
-  console.log("3");
+  //console.log("3");
   return (
     <>
       <button onClick={() => setOpen(true)}>Open</button>

@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TabBarIcon from "../components/TabBarIcon";
 import StocksScreen from "../screens/StocksScreen";
 import SearchScreen from "../screens/SearchScreen";
+import AccountScreen from "../screens/AccountScreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 
 const BottomTab = createBottomTabNavigator();
@@ -32,6 +33,16 @@ export default function BottomTabNavigator({ navigation, route }) {
           title: "Search",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-search" />
+          ),
+        }}
+      />
+      <BottomTab.Screen
+        name="Account"
+        component={AccountScreen}
+        options={{
+          title: "Account",
+          tabBarIcon: ({ focused }) => (
+            <TabBarIcon focused={focused} name="md-person-circle" />
           ),
         }}
       />

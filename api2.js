@@ -20,7 +20,7 @@ export function UseStockData(Symbol) {
 
     let records = Object.entries(data);
     // let history = await data.historical;
-    console.log(records);
+    //console.log(records);
 
     return records.map((company) => {
       return {
@@ -49,7 +49,7 @@ export function UseStockData(Symbol) {
       `https://financialmodelingprep.com/api/v3/quote/${Symbol}?apikey=${API_KEY}`
     );
     let company = await res.json();
-    console.log(company);
+    //console.log(company);
 
     return {
       name: company[0].name,

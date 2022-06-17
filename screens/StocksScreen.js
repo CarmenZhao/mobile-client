@@ -63,13 +63,13 @@ export default function StocksScreen({ route }) {
   const { ServerURL, watchList, removeFromWatchlist } = useStocksContext();
   const [state, setState] = useState([]);
   const [myList, setMyList] = useState([]);
-  // can put more code here
 
   useEffect(() => {
     // FixMe: fetch stock data from the server for any new symbols added to the watchlist and save in local StocksScreen state
+
+    watchList.map((x) => console.log(x));
     setMyList(watchList);
     //console.log("check");
-    //watchList.map((x) => console.log(x));
   }, [watchList]);
 
   return (
@@ -98,7 +98,9 @@ export default function StocksScreen({ route }) {
                 {symbol}
               </Text>
               <View>
-                <Text></Text>
+                <Text style={styles.symbol}>
+                  put close price and percentage
+                </Text>
               </View>
             </View>
             //</View>
