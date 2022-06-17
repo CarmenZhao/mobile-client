@@ -9,8 +9,7 @@ import { useStocksContext } from "../contexts/StocksContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LoginScreen({ navigation }) {
-  const { ServerURL, setState, setLoginUser, isLoggedIn, setIsLoggedIn } =
-    useStocksContext();
+  const { ServerURL, setIsLoggedIn } = useStocksContext();
   const [inputEmail, setInputEmail] = useState("");
   const [inputPassword, setInputPassword] = useState("");
 
@@ -33,13 +32,10 @@ export default function LoginScreen({ navigation }) {
       console.log(data);
       setIsLoggedIn(true);
       AsyncStorage.setItem("token", data.token);
-      //setState(data.watchlist.split(","));
-      //setLoginUser(data.user);
       AsyncStorage.setItem("loginuser", data.user);
       AsyncStorage.setItem("watchlist", data.watchlist);
-      //setIsLoggedIn(true);
-      //set watchlist
 
+      /*check asyncStorage, can delete later*/
       console.log("Check async after login");
       try {
         const value = await AsyncStorage.getItem("loginuser");
@@ -48,13 +44,13 @@ export default function LoginScreen({ navigation }) {
         }
       } catch (error) {
         console.log(error);
-        // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
       }
+      /*check asyncStorage, can delete later*/
 
       navigation.navigate("Home");
     } else {
       console.log("failed");
-      //need error handling
+      //need error handling!!!!!
     }
   }
 

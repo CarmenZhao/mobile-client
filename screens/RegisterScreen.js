@@ -6,9 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 
 import { useStocksContext } from "../contexts/StocksContext";
-import { useStockAPI } from "../api";
-import SearchBar from "../components/SearchBar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function RegisterScreen({ navigation }) {
   const { ServerURL } = useStocksContext();

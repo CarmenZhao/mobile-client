@@ -6,8 +6,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { TextInput } from "react-native-gesture-handler";
 
 import { useStocksContext } from "../contexts/StocksContext";
-import { useStockAPI } from "../api";
-import SearchBar from "../components/SearchBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AccountScreen({ navigation }) {
@@ -24,16 +22,6 @@ export default function AccountScreen({ navigation }) {
       console.error("Error clearing app data.");
     }
   }
-  //   async function clearData() {
-  //     try {
-  //       await AsyncStorage.clear();
-  //       console.log("clear storage");
-  //       navigation.navigate("Login");
-  //     } catch (error) {
-  //       console.error("Error clearing app data.");
-  //       console.log(error);
-  //     }
-  //   }
 
   return (
     <View>
