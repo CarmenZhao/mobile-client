@@ -11,10 +11,10 @@ import SearchBar from "../components/SearchBar";
 
 // FixMe: implement other components and functions used in SearchScreen here (don't just put all the JSX in SearchScreen below)
 
-function FilterStock(text) {
-  let temp = allStocks.filter((stock) => RegExp(text, "i").test(stock.symbol));
-  setFilteredStocks(temp);
-}
+// function FilterStock(text) {
+//   let temp = allStocks.filter((stock) => RegExp(text, "i").test(stock.symbol));
+//   setFilteredStocks(temp);
+// }
 
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist, watchList } = useStocksContext();
@@ -22,6 +22,13 @@ export default function SearchScreen({ navigation }) {
   const [searchText, setSearchText] = useState("");
   const [allStocks, setAllStocks] = useState([]); //all stocks from api
   const [filteredStocks, setFilteredStocks] = useState([]); //stock filtered by user input
+
+  const FilterStock = (text) => {
+    let temp = allStocks.filter((stock) =>
+      RegExp(text, "i").test(stock.symbol)
+    );
+    setFilteredStocks(temp);
+  };
 
   useEffect(() => {
     // FixMe: fetch symbol names from the server and save in local SearchScreen state

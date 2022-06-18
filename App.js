@@ -81,31 +81,46 @@ export default function App() {
         <StocksProvider>
           {Platform.OS === "ios" && <StatusBar barStyle="default" />}
           <NavigationContainer theme={MyTheme}>
+            
             {isLoggedIn ? (
-              <Stack.Navigator>
+              <Stack.Navigator initialRouteName={initialRoute}>
+               
                 <Stack.Screen
                   name="Home"
                   component={BottomTabNavigator}
                   options={{ headerShown: false }}
                 />
-              </Stack.Navigator>
-            ) : (
-              <Stack.Navigator initialRouteName="Login">
-                <Stack.Screen
-                  name="Home"
-                  component={BottomTabNavigator}
-                  options={{ headerShown: false }}
-                />
+                
                 <Stack.Screen
                   name="Login"
-                  component={LoginScreen}
-                  //options={{ headerShown: false }}
+                  component={LoginScreen} //options={{ headerShown: false }}
                 />
+               
                 <Stack.Screen
                   name="Register"
-                  component={RegisterScreen}
-                  //options={{ headerShown: false }}
+                  component={RegisterScreen} //options={{ headerShown: false }}
                 />
+              
+              </Stack.Navigator>
+            ) : (
+              <Stack.Navigator initialRouteName={initialRoute}>
+             
+                <Stack.Screen
+                  name="Home"
+                  component={BottomTabNavigator}
+                  options={{ headerShown: false }}
+                />
+           
+                <Stack.Screen
+                  name="Login"
+                  component={LoginScreen} //options={{ headerShown: false }}
+                />
+          
+                <Stack.Screen
+                  name="Register"
+                  component={RegisterScreen} //options={{ headerShown: false }}
+                />
+            
               </Stack.Navigator>
             )}
           </NavigationContainer>

@@ -67,24 +67,6 @@ export const StocksProvider = ({ children }) => {
       newState.splice(index, 1);
       setState(newState);
     }
-    //   const newState = state ?? [];
-    //state.map((x) => console.log(x));
-    //AsyncStorage.setItem("@Watchlist", JSON.stringify(newState));
-    try {
-      const value = await AsyncStorage.getItem("watchlist");
-      if (value !== null) {
-        let values = JSON.parse(value);
-        let index = values.indexOf(symbol);
-        if (index !== -1) {
-          values.splice(index, 1);
-          AsyncStorage.setItem("watchlist", JSON.stringify(values));
-        }
-        //values.map((e) => console.log(e));
-      }
-    } catch (error) {
-      console.log(error);
-      // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
-    }
   }
 
   let _retrieveData = async () => {
@@ -92,16 +74,16 @@ export const StocksProvider = ({ children }) => {
       const value = await AsyncStorage.getItem("watchlist");
       console.log("check async in stockcontext");
       console.log(value);
-      if(value!=null){
+      if (value != null) {
         let loginUserWatchlist = value.split(",");
         console.log(loginUserWatchlist);
+        console.log("state: " + state);
         setState(loginUserWatchlist);
+      } else {
+        console.log("state: " + state);
+        let temp = [];
+        setState(temp);
       }
-      else{
-        let temp=[];
-        setState(temp)
-      }
-      
     } catch (error) {
       console.log(error);
       // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
@@ -115,7 +97,7 @@ export const StocksProvider = ({ children }) => {
 
   useEffect(() => {
     // FixMe: Retrieve watchlist from persistent storage
-    AsyncStorage.setItem("watchlist", state.toString());
+    AsyncStorage.setItem("watchlist", state.toString()); //!!!!!!
     let payload = state;
     console.log(payload);
     payload = payload.toString();
