@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
 const API_KEY1 = "962935ACJCJMVRV3"; //100 days data
-const API_KEY = "607f84ac4ebc39533caed82e8a001d02";
+//const API_KEY = "607f84ac4ebc39533caed82e8a001d02";
+const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
 
 export function UseStockData(Symbol) {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,6 @@ export function UseStockData(Symbol) {
 
     let records = Object.entries(data);
     // let history = await data.historical;
-    console.log(records);
 
     return records.map((company) => {
       return {
@@ -33,6 +33,31 @@ export function UseStockData(Symbol) {
       };
     });
   }
+
+  async function fetchComInfo() {
+    let res = await fetch(
+      `https://financialmodelingprep.com/api/v3/quote/${Symbol}?apikey=${API_KEY}`
+    );
+
+    let company = await res.json();
+    //console.log(company);
+
+    return {
+      name: company[0].name,
+      price: company[0].price,
+      change: company[0].change,
+      open: company[0].open,
+      dayLow: company[0].dayLow,
+      dayHigh: company[0].dayHigh,
+      eps: company[0].eps,
+      volume: company[0].volume,
+      mktCap: company[0].marketCap,
+      changesPercentage: company[0].changesPercentage,
+      change: company[0].change,
+      exchange: company[0].exchange,
+    };
+  }
+
   useEffect(() => {
     (async () => {
       try {
@@ -44,26 +69,11 @@ export function UseStockData(Symbol) {
       }
     })();
   }, []);
-  async function fetchComInfo() {
-    let res = await fetch(
-      `https://financialmodelingprep.com/api/v3/quote/${Symbol}?apikey=${API_KEY}`
-    );
-    let company = await res.json();
-    console.log(company);
-
-    return {
-      name: company[0].name,
-      price: company[0].price,
-      change: company[0].change,
-      dayLow: company[0].dayLow,
-      dayHigh: company[0].dayHigh,
-    };
-  }
 
   useEffect(() => {
     (async () => {
       try {
-        setCompData(await fetchComInfo(Symbol));
+        setCompData(await fetchComInfo());
         setLoading(false);
       } catch (err) {
         setError(err);
@@ -71,5 +81,6 @@ export function UseStockData(Symbol) {
       }
     })();
   }, []);
+
   return { loading, rowData, compData, error };
 }
