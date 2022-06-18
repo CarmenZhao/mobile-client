@@ -5,7 +5,7 @@ const StocksContext = React.createContext();
 export const useStocksContext = () => useContext(StocksContext);
 
 export const StocksProvider = ({ children }) => {
-  const ServerURL = "http://localhost:3000";
+  const ServerURL = "http://192.168.8.139:3000";
   const [state, setState] = useState([]);
   const [loginUser, setLoginUser] = useState();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -92,9 +92,16 @@ export const StocksProvider = ({ children }) => {
       const value = await AsyncStorage.getItem("watchlist");
       console.log("check async in stockcontext");
       console.log(value);
-      let loginUserWatchlist = value.split(",");
-      console.log(loginUserWatchlist);
-      setState(loginUserWatchlist);
+      if (value != null) {
+        let loginUserWatchlist = value.split(",");
+        console.log(loginUserWatchlist);
+        console.log("state: " + state);
+        setState(loginUserWatchlist);
+      } else {
+        console.log("state: " + state);
+        let temp = [];
+        setState(temp);
+      }
     } catch (error) {
       console.log(error);
       // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
@@ -108,7 +115,7 @@ export const StocksProvider = ({ children }) => {
 
   useEffect(() => {
     // FixMe: Retrieve watchlist from persistent storage
-    AsyncStorage.setItem("watchlist", state);
+    AsyncStorage.setItem("watchlist", state.toString()); //!!!!!!
     let payload = state;
     console.log(payload);
     payload = payload.toString();
@@ -133,7 +140,7 @@ export const StocksProvider = ({ children }) => {
   return (
     <StocksContext.Provider
       value={{
-        ServerURL: "http://localhost:3000",
+        ServerURL: ServerURL,
         watchList: state,
         addToWatchlist,
         removeFromWatchlist,

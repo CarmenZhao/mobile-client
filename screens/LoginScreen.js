@@ -33,7 +33,11 @@ export default function LoginScreen({ navigation }) {
       setIsLoggedIn(true);
       AsyncStorage.setItem("token", data.token);
       AsyncStorage.setItem("loginuser", data.user);
-      AsyncStorage.setItem("watchlist", data.watchlist);
+      if (data.watchlist) {
+        AsyncStorage.setItem("watchlist", data.watchlist.toString()); //!!!!!!!!!
+      }
+
+      console.log(typeof data.watchlist);
 
       /*check asyncStorage, can delete later*/
       console.log("Check async after login");

@@ -56,7 +56,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <StockDetailScreen Symbol={testSymbol} />
+      {/* <StockDetailScreen Symbol={testSymbol} /> */}
       <StocksProvider>
         {Platform.OS === "ios" && <StatusBar barStyle="default" />}
         <NavigationContainer theme={DarkTheme}>
