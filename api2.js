@@ -2,13 +2,15 @@ import { useState, useEffect } from "react";
 
 const API_KEY1 = "962935ACJCJMVRV3"; //100 days data
 //const API_KEY = "607f84ac4ebc39533caed82e8a001d02";
-const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
+const API_KEY = "5c0d174bc1907b622517580121861d96";
+//const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
+const API_KEY_SUS = "9bdf814120dd203b072c0828821bd0e2";
 
 export function UseStockData(Symbol) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rowData, setRowData] = useState([]);
-  const [compData, setCompData] = useState([]);
+  // const [compData, setCompData] = useState([]);
 
   async function fetchStockInfo() {
     let res = await fetch(
@@ -34,6 +36,26 @@ export function UseStockData(Symbol) {
     });
   }
 
+  useEffect(() => {
+    (async () => {
+      try {
+        setRowData(await fetchStockInfo(Symbol));
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  return { loading, rowData, error };
+}
+
+export function GetStockDetails(Symbol) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [compData, setCompData] = useState([]);
+
   async function fetchComInfo() {
     let res = await fetch(
       `https://financialmodelingprep.com/api/v3/quote/${Symbol}?apikey=${API_KEY}`
@@ -53,23 +75,9 @@ export function UseStockData(Symbol) {
       volume: company[0].volume,
       mktCap: company[0].marketCap,
       changesPercentage: company[0].changesPercentage,
-      change: company[0].change,
       exchange: company[0].exchange,
     };
   }
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setRowData(await fetchStockInfo(Symbol));
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    })();
-  }, []);
-
   useEffect(() => {
     (async () => {
       try {
@@ -82,5 +90,54 @@ export function UseStockData(Symbol) {
     })();
   }, []);
 
-  return { loading, rowData, compData, error };
+  return { loading, compData, error };
+}
+
+export function getPrice(list) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [priceData, setPriceData] = useState([]);
+  let allSymbol = list.join(",");
+  console.log("before" + allSymbol);
+  console.log(
+    `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
+  );
+
+  async function fetchPriceInfo() {
+    let allSymbol = list.join(",");
+    console.log("after" + allSymbol);
+    console.log(
+      `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
+    );
+    let res = await fetch(
+      `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
+    );
+
+    let company = await res.json();
+    console.log(company);
+    return company.map((c) => {
+      return {
+        name: c.symbol,
+        price: c.prevClose,
+      };
+    });
+  }
+
+  useEffect(() => {
+    (async () => {
+      try {
+        setPriceData(await fetchPriceInfo());
+
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // useEffect(() => {
+  //   console.log(priceData);
+  // }, [[priceData]]);
+  return { loading, priceData, error };
 }

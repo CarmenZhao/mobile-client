@@ -25,6 +25,12 @@ export default function StockDetailScreen(props) {
   if (error != null) {
     return <Text>Error</Text>;
   }
+  if (props.isOpen) {
+    refRBSheet.current.open();
+  }
+  // console.log(props.isOpen)
+  // console.log(props.Symbol)
+  refRBSheet.current.open();
 
   return (
     <>
@@ -33,6 +39,7 @@ export default function StockDetailScreen(props) {
           title="OPEN BOTTOM SHEET"
           onPress={() => refRBSheet.current.open()}
         />
+
         <View>
           <RBSheet
             animationType={"slide"}
@@ -48,16 +55,16 @@ export default function StockDetailScreen(props) {
                 backgroundColor: "#000",
               },
               container: {
-                backgroundColor: "rgba(242, 242, 242,1)",
+                backgroundColor: "black",
                 borderTopLeftRadius: 50,
                 borderTopRightRadius: 50,
                 shadowColor: "black",
               },
             }}
           >
-          
-              <StockDetailCard data={compData} rowData={rowData} />
-          
+            <Text>Check!!!</Text>
+            <Text>{props.Symbol}</Text>
+            <StockDetailCard data={compData} rowData={rowData} />
           </RBSheet>
         </View>
       </View>
@@ -69,6 +76,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-
   },
 });

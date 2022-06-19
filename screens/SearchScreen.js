@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Button } from "react-native";
+import { StyleSheet, View, Text, Button, TouchableOpacity } from "react-native";
 
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
@@ -41,15 +41,17 @@ export default function SearchScreen({ navigation }) {
       <SearchBar defaultText={searchText} handleSearch={FilterStock} />
       <ScrollView>
         {filteredStocks.map((stock) => (
-          <View key={stock.symbol}>
+          <View key={stock.symbol} style={styles.rowStyle}>
             <View style={styles.sybmbolDiv}>
               <Text style={styles.symbol}>{stock.symbol}</Text>
-              <Button
-                title="Add"
+              <TouchableOpacity
+                style={styles.addBtn}
                 onPress={() => {
                   addToWatchlist(stock.symbol);
                 }}
-              />
+              >
+                <Text style={styles.btnText}> + </Text>
+              </TouchableOpacity>
             </View>
             <Text style={styles.name}>{stock.name}</Text>
             <View style={styles.space} />
@@ -85,23 +87,40 @@ const styles = StyleSheet.create({
 
   sybmbolDiv: {
     flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  addBtn: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
+  btnText: {
+    fontSize: scaleSize(28),
   },
 
   symbol: {
+    flex: 1,
     paddingHorizontal: scaleSize(10),
-    paddingTop: scaleSize(10),
-    fontSize: scaleSize(20),
+    paddingTop: scaleSize(26),
+    paddingBottom: 5,
+    fontSize: scaleSize(28),
     color: "black",
   },
 
   name: {
     paddingHorizontal: scaleSize(10),
-    color: "#fff",
+    color: "black",
   },
 
   space: {
     marginTop: scaleSize(10),
-    borderBottomColor: "#2F2F2F",
+
+    //borderBottomColor: "rgba(6,7,10,0.2)",
+    borderBottomColor: "#E4E8ED",
     borderBottomWidth: scaleSize(1),
+  },
+  rowStyle: {
+    marginHorizontal: scaleSize(20),
   },
 });

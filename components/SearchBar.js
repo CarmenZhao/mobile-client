@@ -107,14 +107,16 @@ import { useStockAPI } from "../api";
 export default function SearchBar(props) {
   return (
     <View style={styles.searchBar}>
-      <Ionicons name="md-search" style={styles.searchIcon} />
       <TextInput
         style={styles.searchPhrase}
         placeholder="Search by stock symbol or company name"
-        placeholderTextColor="#fff"
+        placeholderTextColor="rgba(6,7,10,0.5)"
         defaultValue={props.defaultText}
         onChangeText={(text) => props.handleSearch(text)}
       />
+      <View style={styles.frame}>
+        <Ionicons name="md-search" style={styles.searchIcon} />
+      </View>
     </View>
   );
 }
@@ -123,18 +125,36 @@ const styles = StyleSheet.create({
   searchBar: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#1F1F1F",
-    height: scaleSize(40),
+    backgroundColor: "rgba(255,255,255,0)",
+    height: scaleSize(50),
   },
 
   searchIcon: {
-    paddingHorizontal: scaleSize(15),
-    color: "white",
-    fontSize: scaleSize(20),
+    padding: scaleSize(15),
+    paddingTop: scaleSize(10),
+
+    // paddingHorizontal: scaleSize(15),
+    color: "black",
+    fontSize: scaleSize(25),
   },
 
   searchPhrase: {
+    paddingLeft: 20,
+    flex: 6,
+    color: "black",
+    height: "100%",
+    borderColor: "#E4E8ED",
+    borderRightWidth: 0,
+    borderStyle: "solid",
+    borderWidth: 1,
+  },
+  frame: {
     flex: 1,
-    color: "#fff",
+    flexDirection: "row",
+    justifyContent: "center",
+    height: "100%",
+    borderColor: "#E4E8ED",
+    borderStyle: "solid",
+    borderWidth: 1,
   },
 });

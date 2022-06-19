@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 //const API_KEY = "f0bbfa7a7c6fb22ceba827daa52f8e26";
 //const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
-//const API_KEY = "5c0d174bc1907b622517580121861d96";
-const API_KEY = "c00387c449baaad2b88dea5822bed61e";
+const API_KEY = "5c0d174bc1907b622517580121861d96";
+//const API_KEY = "c00387c449baaad2b88dea5822bed61e";
 
 //This function return the list of company name and symbol
 //use in the search bar drop down

@@ -15,6 +15,7 @@ import StockDetailScreen from "./screens/DetailScreen";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 
+
 import "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -77,7 +78,7 @@ export default function App() {
         source={require("./assets/images/BGIMG.png")}
         style={{ width: "100%", height: "100%" }}
       >
-        <StockDetailScreen Symbol={testSymbol} />
+        {/* <StockDetailScreen Symbol={testSymbol} /> */}
         <StocksProvider>
           {Platform.OS === "ios" && <StatusBar barStyle="default" />}
           <NavigationContainer theme={MyTheme}>
