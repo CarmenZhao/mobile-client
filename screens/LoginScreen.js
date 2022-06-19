@@ -33,25 +33,13 @@ export default function LoginScreen({ navigation }) {
       setIsLoggedIn(true);
       AsyncStorage.setItem("token", data.token);
       AsyncStorage.setItem("loginuser", data.user);
-      if (data.watchlist) {
-        AsyncStorage.setItem("watchlist", data.watchlist.toString()); //!!!!!!!!!
-      }
+      // if (data.watchlist) {
+      //   AsyncStorage.setItem("watchlist", data.watchlist.toString()); //!!!!!!!!!
+      // }
 
-      console.log(typeof data.watchlist);
+      // console.log(typeof data.watchlist);
 
-      /*check asyncStorage, can delete later*/
-      console.log("Check async after login");
-      try {
-        const value = await AsyncStorage.getItem("loginuser");
-        if (value !== null) {
-          console.log(value);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      /*check asyncStorage, can delete later*/
-
-      navigation.navigate("Home");
+      //navigation.navigate("Home");
     } else {
       console.log("failed");
       //need error handling!!!!!
