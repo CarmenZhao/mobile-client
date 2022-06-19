@@ -13,10 +13,11 @@ export default function AccountScreen({ navigation }) {
   async function logout() {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      console.log(keys);
+      //console.log(keys);
       await AsyncStorage.multiRemove(keys);
-      console.log("clear storage");
+      //console.log("clear storage");
       setIsLoggedIn(false);
+      alert("Log out successfully!");
       navigation.navigate("Login");
     } catch (error) {
       console.error("Error clearing app data.");

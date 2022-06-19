@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 
 const API_KEY1 = "962935ACJCJMVRV3"; //100 days data
-//const API_KEY = "607f84ac4ebc39533caed82e8a001d02";
-const API_KEY = "5c0d174bc1907b622517580121861d96";
+const API_KEY = "607f84ac4ebc39533caed82e8a001d02";
+//const API_KEY = "5c0d174bc1907b622517580121861d96";
 //const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
 const API_KEY_SUS = "9bdf814120dd203b072c0828821bd0e2";
 
@@ -97,28 +97,47 @@ export function getPrice(list) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [priceData, setPriceData] = useState([]);
-  let allSymbol = list.join(",");
-  console.log("before" + allSymbol);
-  console.log(
-    `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
-  );
+  const [changeData, setChangeData] = useState([]);
+
+  // let allSymbol = list.join(",");
+  // console.log("before" + allSymbol);
+  // console.log(
+  //   `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
+  // );
 
   async function fetchPriceInfo() {
     let allSymbol = list.join(",");
-    console.log("after" + allSymbol);
-    console.log(
-      `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
-    );
     let res = await fetch(
       `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
     );
 
     let company = await res.json();
-    console.log(company);
     return company.map((c) => {
+      let Symbol = c.symbol;
+      let Price = c.prevClose;
       return {
-        name: c.symbol,
-        price: c.prevClose,
+        symbol: Symbol,
+        price: Price,
+      };
+    });
+  }
+
+  async function fetchChangeInfo() {
+    let allSymbol = list.join(",");
+    let res = await fetch(
+      `https://financialmodelingprep.com/api/v3/stock-price-change/${allSymbol}?apikey=${API_KEY}`
+    );
+
+    let company = await res.json();
+
+    return company.map((c) => {
+      let Symbol = c.symbol;
+      let tmpArr = Object.values(c);
+      let Change = tmpArr[1];
+
+      return {
+        symbol: Symbol,
+        change: Change,
       };
     });
   }
@@ -136,8 +155,18 @@ export function getPrice(list) {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   console.log(priceData);
-  // }, [[priceData]]);
-  return { loading, priceData, error };
+  useEffect(() => {
+    (async () => {
+      try {
+        setChangeData(await fetchChangeInfo());
+
+        setLoading(false);
+      } catch (err) {
+        setError(err);
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  return { loading, priceData, changeData, error };
 }

@@ -27,13 +27,10 @@ export default function RegisterScreen({ navigation }) {
       }),
     });
     let data = await res.json();
-    console.log(data.error);
+    alert(data.message);
     if (data.error != true) {
-      console.log(data);
-      navigation.navigate("Login"); //redirect to login screen after successful registration
-    } else {
-      console.log("failed");
-      //need error handling
+      //redirect to login screen after successful registration
+      navigation.navigate("Login");
     }
   }
   return (

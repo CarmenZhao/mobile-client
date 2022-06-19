@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Button } from "react-native";
+import { StyleSheet, View, Button, Alert } from "react-native";
 
 import { scaleSize } from "../constants/Layout";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,33 +28,13 @@ export default function LoginScreen({ navigation }) {
       }),
     });
     let data = await res.json();
-    if (!data.hasOwnProperty("error")) {
-      console.log(data);
+    console.log(data);
+    if (data.error != true) {
       setIsLoggedIn(true);
       AsyncStorage.setItem("token", data.token);
       AsyncStorage.setItem("loginuser", data.user);
-      if (data.watchlist) {
-        AsyncStorage.setItem("watchlist", data.watchlist.toString()); //!!!!!!!!!
-      }
-
-      console.log(typeof data.watchlist);
-
-      /*check asyncStorage, can delete later*/
-      console.log("Check async after login");
-      try {
-        const value = await AsyncStorage.getItem("loginuser");
-        if (value !== null) {
-          console.log(value);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      /*check asyncStorage, can delete later*/
-
-      navigation.navigate("Home");
     } else {
-      console.log("failed");
-      //need error handling!!!!!
+      alert(data.message);
     }
   }
 
@@ -73,8 +53,9 @@ export default function LoginScreen({ navigation }) {
         placeholder="Password"
       />
       <Button title="Login" onPress={login} />
+      {/* redirect to register screen */}
       <Button
-        title="Register"
+        title="Create an Account"
         onPress={() => navigation.navigate("Register")}
       />
     </View>

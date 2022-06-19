@@ -6,7 +6,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { GetStockDetails, getPrice } from "../api2";
 import RBSheet from "react-native-raw-bottom-sheet";
 import StockDetailCard from "../components/StockDetailCard";
-import { set } from "react-native-reanimated";
+//
 
 export default function StocksScreen({ route }) {
   const { ServerURL, watchList, removeFromWatchlist } = useStocksContext();
@@ -14,7 +14,9 @@ export default function StocksScreen({ route }) {
   const refRBSheet = useRef();
   const windowHeight = Dimensions.get("window").height;
   const [Symbol, setSymbol] = useState([]);
-  const { loading, priceData, error } = getPrice(watchList);
+  const { loading, priceData, changeData, error } = getPrice(watchList);
+  const [allSymbol, setAllSymbol] = useState([]);
+  const [allSymbolData, setSymbolData] = useState([]);
 
   // if (loading) {
   //   return <Text>loading</Text>;
@@ -29,27 +31,46 @@ export default function StocksScreen({ route }) {
   }, [watchList]);
 
   useEffect(() => {
-    // FixMe: fetch stock data from the server for any new symbols added to the watchlist and save in local StocksScreen state
-    console.log(priceData);
+    let allSymbol = {};
+    priceData.map((e) => (allSymbol[e.symbol] = e.price));
+    setAllSymbol(allSymbol);
   }, [priceData]);
-  //console.log(priceData);
+
+  useEffect(() => {
+    let allSymbolData = {};
+    changeData.map((e) => (allSymbolData[e.symbol] = e.change));
+    setSymbolData(allSymbolData);
+  }, [changeData]);
+
   return (
     <View style={styles.container}>
       <View style={styles.stockList}>
         <ScrollView>
-          {myList.map((symbol) => (
-            <View style={styles.stockItem} key={symbol}>
+          {myList.map((symbol2) => (
+            <View style={styles.stockItem} key={symbol2}>
               <Text
                 style={styles.symbol}
                 onPress={() => {
+                  console.log(allSymbol);
                   refRBSheet.current.open();
-                  setSymbol(symbol);
+                  setSymbol(symbol2);
                 }}
               >
-                {symbol}
+                {symbol2}
               </Text>
-              <View>
-                <Text style={styles.symbol}>{priceData}</Text>
+              <View style={{ flexDirection: "column", alignItems: "end" }}>
+                <Text style={styles.price}>{allSymbol[symbol2]}</Text>
+                <View
+                  style={
+                    allSymbolData[symbol2] > 0
+                      ? styles.badgeGreen
+                      : styles.badgeRed
+                  }
+                >
+                  <Text style={{ color: "white" }}>
+                    {allSymbolData[symbol2]}
+                  </Text>
+                </View>
               </View>
             </View>
           ))}
@@ -177,5 +198,24 @@ const styles = StyleSheet.create({
   stockPropertyValue: {
     color: "black",
     fontSize: scaleSize(15),
+  },
+  price: {
+    fontSize: scaleSize(12),
+  },
+  badgeGreen: {
+    fontSize: scaleSize(4),
+    textAlign: "center",
+    color: "white",
+    backgroundColor: "#00C26D",
+    borderRadius: 10,
+    width: 40,
+  },
+  badgeRed: {
+    fontSize: scaleSize(4),
+    textAlign: "center",
+    color: "white",
+    backgroundColor: "#FF463E",
+    borderRadius: 10,
+    width: 40,
   },
 });

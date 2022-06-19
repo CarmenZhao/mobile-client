@@ -19,6 +19,9 @@ export const StocksProvider = ({ children }) => {
       setState((x) => {
         return [...x, newSymbol];
       });
+      let temp = [...oldState, newSymbol];
+      AsyncStorage.setItem("watchlist", temp.toString());
+      UpdateDatabase(temp.toString());
     } else {
       console.log("This symbol already in the watchlist");
       //notify users
@@ -26,32 +29,18 @@ export const StocksProvider = ({ children }) => {
   }
 
   async function UpdateDatabase(payload) {
-    const url = `${ServerURL}/users/watchlist`;
-    let user = "";
-    try {
-      const value = await AsyncStorage.getItem("loginuser");
-      if (value !== null) {
-        console.log(value);
-        user = value;
-      }
-    } catch (error) {
-      console.log(error);
-      // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
-    }
-    //console.log(loginUser);
-    let a = JSON.stringify({
-      email: user,
-      newWatchlist: payload,
-    });
-    console.log(a);
+    const url = `${ServerURL}/watchlist/update`;
+
+    const token = await AsyncStorage.getItem("token");
+
     let res = await fetch(url, {
       method: "POST",
       headers: {
         accept: "application/json",
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        email: user,
         newWatchlist: payload,
       }),
     });
@@ -66,11 +55,34 @@ export const StocksProvider = ({ children }) => {
       let newState = [...state];
       newState.splice(index, 1);
       setState(newState);
+      AsyncStorage.setItem("watchlist", newState.toString());
+      UpdateDatabase(newState.toString());
     }
   }
 
-  let _retrieveData = async () => {
+  async function _retrieveWatchlist(token) {
+    const url = `${ServerURL}/watchlist/get`;
     try {
+      let res = await fetch(url, {
+        method: "GET",
+        headers: {
+          accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      let data = await res.json();
+      console.log(data.message[0].watchlist);
+      data = data.message[0].watchlist;
+      if (data && data != null && data != "") {
+        data = data.split(",");
+        setState(data);
+        AsyncStorage.setItem("watchlist", data.toString());
+      } else {
+        let temp = [];
+        setState(temp);
+      }
+    } catch (error) {
       const value = await AsyncStorage.getItem("watchlist");
       console.log("check async in stockcontext");
       console.log(value);
@@ -79,8 +91,39 @@ export const StocksProvider = ({ children }) => {
         console.log(loginUserWatchlist);
         console.log("state: " + state);
         setState(loginUserWatchlist);
+      }
+    }
+  }
+
+  // let _retrieveData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem("watchlist");
+  //     console.log("check async in stockcontext");
+  //     console.log(value);
+  //     if (value != null) {
+  //       let loginUserWatchlist = value.split(",");
+  //       console.log(loginUserWatchlist);
+  //       console.log("state: " + state);
+  //       setState(loginUserWatchlist);
+  //     } else {
+  //       console.log("state: " + state);
+  //       let temp = [];
+  //       setState(temp);
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
+  //   }
+  // };
+
+  let _retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      console.log("check token");
+      console.log(value);
+      if (value != null) {
+        _retrieveWatchlist(value);
       } else {
-        console.log("state: " + state);
         let temp = [];
         setState(temp);
       }
@@ -92,32 +135,42 @@ export const StocksProvider = ({ children }) => {
 
   useEffect(() => {
     // FixMe: Retrieve watchlist from persistent storage
+    console.log(isLoggedIn);
     _retrieveData();
   }, [isLoggedIn]);
 
-  useEffect(() => {
-    // FixMe: Retrieve watchlist from persistent storage
-    AsyncStorage.setItem("watchlist", state.toString()); //!!!!!!
-    let payload = state;
-    console.log(payload);
-    payload = payload.toString();
-    console.log("payload: " + payload);
-    UpdateDatabase(payload);
-  }, [state]);
-
-  /*only for checking, can delete later*/
-  async function getAsync() {
+  let _retrieveToken = async () => {
     try {
-      const value = await AsyncStorage.getItem("loginuser");
-      if (value !== null) {
-        console.log(value);
+      const value = await AsyncStorage.getItem("token");
+      console.log("check token");
+      console.log(value);
+      if (value == null) {
+        setIsLoggedIn(false);
+      } else {
+        setIsLoggedIn(true);
       }
     } catch (error) {
       console.log(error);
       // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
     }
-  }
-  /*only for checking, can delete later*/
+  };
+
+  useEffect(() => {
+    // try {
+    //   const value = AsyncStorage.getItem("token");
+    //   console.log("check token");
+    //   console.log(value);
+    //   if (value != null) {
+    //     setIsLoggedIn(true);
+    //   } else {
+    //     setIsLoggedIn(false);
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    //   // TODO IMPORTANT DO STH WITH ERROR ,display warning msg
+    // }
+    _retrieveToken();
+  }, []);
 
   return (
     <StocksContext.Provider
@@ -127,6 +180,7 @@ export const StocksProvider = ({ children }) => {
         addToWatchlist,
         removeFromWatchlist,
         setIsLoggedIn,
+        isLoggedIn: isLoggedIn,
       }}
     >
       {children}
