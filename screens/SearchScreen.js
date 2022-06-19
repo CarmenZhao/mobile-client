@@ -9,19 +9,14 @@ import { useStocksContext } from "../contexts/StocksContext";
 import { useStockAPI } from "../api";
 import SearchBar from "../components/SearchBar";
 
-// FixMe: implement other components and functions used in SearchScreen here (don't just put all the JSX in SearchScreen below)
-
-// function FilterStock(text) {
-//   let temp = allStocks.filter((stock) => RegExp(text, "i").test(stock.symbol));
-//   setFilteredStocks(temp);
-// }
-
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist, watchList } = useStocksContext();
   const { loading, stockData, error } = useStockAPI();
   const [searchText, setSearchText] = useState("");
-  const [allStocks, setAllStocks] = useState([]); //all stocks from api
-  const [filteredStocks, setFilteredStocks] = useState([]); //stock filtered by user input
+  //all stocks from api
+  const [allStocks, setAllStocks] = useState([]);
+  //stock filtered by user search input
+  const [filteredStocks, setFilteredStocks] = useState([]);
 
   const FilterStock = (text) => {
     let temp = allStocks.filter((stock) =>
@@ -31,33 +26,38 @@ export default function SearchScreen({ navigation }) {
   };
 
   useEffect(() => {
-    // FixMe: fetch symbol names from the server and save in local SearchScreen state
     setAllStocks(stockData);
     setFilteredStocks(stockData);
   }, [stockData]);
 
-  return (
-    <View style={styles.container}>
-      <SearchBar defaultText={searchText} handleSearch={FilterStock} />
-      <ScrollView>
-        {filteredStocks.map((stock) => (
-          <View key={stock.symbol}>
-            <View style={styles.sybmbolDiv}>
-              <Text style={styles.symbol}>{stock.symbol}</Text>
-              <Button
-                title="Add"
-                onPress={() => {
-                  addToWatchlist(stock.symbol);
-                }}
-              />
+  if (loading) {
+    return <Text>Loading...</Text>;
+  } else if (error) {
+    return <Text>Oops...something went wrong</Text>;
+  } else {
+    return (
+      <View style={styles.container}>
+        <SearchBar defaultText={searchText} handleSearch={FilterStock} />
+        <ScrollView>
+          {filteredStocks.map((stock) => (
+            <View key={stock.symbol}>
+              <View style={styles.sybmbolDiv}>
+                <Text style={styles.symbol}>{stock.symbol}</Text>
+                <Button
+                  title="Add"
+                  onPress={() => {
+                    addToWatchlist(stock.symbol);
+                  }}
+                />
+              </View>
+              <Text style={styles.name}>{stock.name}</Text>
+              <View style={styles.space} />
             </View>
-            <Text style={styles.name}>{stock.name}</Text>
-            <View style={styles.space} />
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-  );
+          ))}
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
