@@ -13,7 +13,7 @@ export default function StocksScreen({ route }) {
   const [myList, setMyList] = useState([]);
   //const [stockInfo, setStockInfo] = useState([]);
   const refRBSheet = useRef();
-  const [stockDetails, setStockDetails] = useState([]);
+  //const [stockDetails, setStockDetails] = useState([]);
   const windowHeight = Dimensions.get("window").height;
   const [Symbol, setSymbol] = useState([]);
   const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";

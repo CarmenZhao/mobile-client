@@ -42,6 +42,8 @@ export default function SearchScreen({ navigation }) {
                 style={styles.addBtn}
                 onPress={() => {
                   addToWatchlist(stock.symbol);
+                  alert(`${stock.symbol} added to watchlist`);
+                  navigation.jumpTo("Stocks");
                 }}
               >
                 <Text style={styles.btnText}> + </Text>

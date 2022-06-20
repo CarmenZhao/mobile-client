@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, View, Text, Dimensions } from "react-native";
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+} from "react-native";
 import { useStocksContext } from "../contexts/StocksContext";
 import { scaleSize } from "../constants/Layout";
 import { ScrollView } from "react-native-gesture-handler";
 import { GetStockDetails, getPrice } from "../api2";
 import RBSheet from "react-native-raw-bottom-sheet";
 import StockDetailCard from "../components/StockDetailCard";
+import { GetLoadingPage } from "../components/loading";
+import { render } from "react-dom";
 //
 
 export default function StocksScreen({ route }) {
@@ -14,9 +23,11 @@ export default function StocksScreen({ route }) {
   const refRBSheet = useRef();
   const windowHeight = Dimensions.get("window").height;
   const [Symbol, setSymbol] = useState([]);
-  const { loading, priceData, changeData, error } = getPrice(watchList);
+  //const { loading2, priceData, changeData, error } = getPrice(watchList);
   const [allSymbol, setAllSymbol] = useState([]);
   const [allSymbolData, setSymbolData] = useState([]);
+  const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
+  const [loading, setLoading] = useState(true);
 
   // if (loading) {
   //   return <Text>loading</Text>;
@@ -26,85 +37,129 @@ export default function StocksScreen({ route }) {
   // }
 
   useEffect(() => {
-    // FixMe: fetch stock data from the server for any new symbols added to the watchlist and save in local StocksScreen state
-    setMyList(watchList);
+    // const newlyAddedSymbols = watchList.filter(
+    //   (symbol) => !myList.some((stock) => stock.symbol === symbol)
+    // ); // get new symbols added to the watchlist
+    // console.log(newlyAddedSymbols);
+    let tempList = [];
+    Promise.all(
+      watchList.map((stockSymbol) =>
+        fetch(
+          `https://financialmodelingprep.com/api/v3/quote/${stockSymbol}?apikey=${API_KEY}`
+        )
+      )
+    )
+      .then(function (responses) {
+        // Get a JSON object from each of the responses
+        return Promise.all(
+          responses.map(function (response) {
+            return response.json();
+          })
+        );
+      })
+      .then(function (data) {
+        console.log(data);
+        data.map((e) => {
+          let obj = {
+            symbol: e[0].symbol,
+            price: e[0].price,
+            change: e[0].changesPercentage.toFixed(2),
+          };
+          tempList.push(obj);
+        });
+        console.log(tempList);
+        setMyList(tempList);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        // if there's an error, log it
+        console.log(error);
+      });
   }, [watchList]);
 
-  useEffect(() => {
-    let allSymbol = {};
-    priceData.map((e) => (allSymbol[e.symbol] = e.price));
-    setAllSymbol(allSymbol);
-  }, [priceData]);
-
-  useEffect(() => {
-    let allSymbolData = {};
-    changeData.map((e) => (allSymbolData[e.symbol] = e.change));
-    setSymbolData(allSymbolData);
-  }, [changeData]);
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.stockList}>
-        <ScrollView>
-          {myList.map((symbol2) => (
-            <View style={styles.stockItem} key={symbol2}>
-              <Text
-                style={styles.symbol}
+  if (loading) {
+    return <GetLoadingPage />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <View style={styles.stockList}>
+          <ScrollView>
+            {myList.map((e) => (
+              <Pressable
+                key={e.symbol}
                 onPress={() => {
                   console.log(allSymbol);
                   refRBSheet.current.open();
-                  setSymbol(symbol2);
+                  setSymbol(e.symbol);
+                }}
+                onLongPress={() => {
+                  Alert.alert("Alert", "Remove from watchlist?", [
+                    {
+                      text: "Cancel",
+                      style: "cancel",
+                    },
+                    {
+                      text: "OK",
+                      onPress: () => removeFromWatchlist(e.symbol),
+                    },
+                  ]);
                 }}
               >
-                {symbol2}
-              </Text>
-              <View style={{ flexDirection: "column", alignItems: "end" }}>
-                <Text style={styles.price}>{allSymbol[symbol2]}</Text>
-                <View
-                  style={
-                    allSymbolData[symbol2] > 0
-                      ? styles.badgeGreen
-                      : styles.badgeRed
-                  }
-                >
-                  <Text style={{ color: "white" }}>
-                    {allSymbolData[symbol2]}
-                  </Text>
+                <View style={styles.stockItem} key={e.symbol}>
+                  <Text style={styles.symbol}>{e.symbol}</Text>
+                  <View
+                    style={{ flexDirection: "column", alignItems: "flex-end" }}
+                  >
+                    <Text style={styles.price}>{e.price}</Text>
+                    <View
+                      style={e.change > 0 ? styles.badgeGreen : styles.badgeRed}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: scaleSize(11),
+                          textAlign: "center",
+                        }}
+                      >
+                        {e.change}%
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-      <View></View>
+              </Pressable>
+            ))}
+          </ScrollView>
+        </View>
+        <View></View>
 
-      <View>
-        <RBSheet
-          animationType={"slide"}
-          ref={refRBSheet}
-          closeOnDragDown={true}
-          closeOnPressMask={true}
-          height={windowHeight / 1.2}
-          customStyles={{
-            wrapper: {
-              backgroundColor: "transparent",
-            },
-            draggableIcon: {
-              backgroundColor: "#000",
-            },
-            container: {
-              backgroundColor: "rgba(242, 242, 242,1)",
-              borderTopLeftRadius: 50,
-              borderTopRightRadius: 50,
-              shadowColor: "black",
-            },
-          }}
-        >
-          <StockDetailCard Symbol={Symbol} />
-        </RBSheet>
+        <View>
+          <RBSheet
+            animationType={"slide"}
+            ref={refRBSheet}
+            closeOnDragDown={true}
+            closeOnPressMask={true}
+            height={windowHeight / 1.2}
+            customStyles={{
+              wrapper: {
+                backgroundColor: "transparent",
+              },
+              draggableIcon: {
+                backgroundColor: "#000",
+              },
+              container: {
+                backgroundColor: "rgba(242, 242, 242,1)",
+                borderTopLeftRadius: 50,
+                borderTopRightRadius: 50,
+                shadowColor: "black",
+              },
+            }}
+          >
+            <StockDetailCard Symbol={Symbol} />
+          </RBSheet>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -120,9 +175,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: scaleSize(10),
+    marginHorizontal: scaleSize(20),
+    marginTop: scaleSize(10),
+    // padding: scaleSize(10),
+    borderBottomColor: "#E4E8ED",
     borderBottomWidth: scaleSize(1),
-    borderBottomColor: "#2F2F2F",
   },
 
   stockItemRightContainer: {
@@ -131,8 +188,12 @@ const styles = StyleSheet.create({
   },
 
   symbol: {
+    flex: 1,
+    //paddingHorizontal: scaleSize(10),
+    paddingTop: scaleSize(26),
+    paddingBottom: scaleSize(10),
+    fontSize: scaleSize(30),
     color: "black",
-    fontSize: scaleSize(20),
   },
 
   closingPrice: {
@@ -200,19 +261,19 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(15),
   },
   price: {
-    fontSize: scaleSize(12),
+    fontSize: scaleSize(20),
   },
+
   badgeGreen: {
-    fontSize: scaleSize(4),
-    textAlign: "center",
+    marginTop: scaleSize(3),
     color: "white",
     backgroundColor: "#00C26D",
     borderRadius: 10,
     width: 40,
   },
+
   badgeRed: {
-    fontSize: scaleSize(4),
-    textAlign: "center",
+    marginTop: scaleSize(8),
     color: "white",
     backgroundColor: "#FF463E",
     borderRadius: 10,
