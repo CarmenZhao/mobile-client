@@ -62,8 +62,6 @@ export default function StockDetailScreen(props) {
               },
             }}
           >
-            <Text>Check!!!</Text>
-            <Text>{props.Symbol}</Text>
             <StockDetailCard data={compData} rowData={rowData} />
           </RBSheet>
         </View>

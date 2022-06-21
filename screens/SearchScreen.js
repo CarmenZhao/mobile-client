@@ -8,6 +8,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useStocksContext } from "../contexts/StocksContext";
 import { useStockAPI } from "../api";
 import SearchBar from "../components/SearchBar";
+import { GetLoadingPage } from "../components/loading";
 
 export default function SearchScreen({ navigation }) {
   const { ServerURL, addToWatchlist, watchList } = useStocksContext();
@@ -30,32 +31,36 @@ export default function SearchScreen({ navigation }) {
     setFilteredStocks(stockData);
   }, [stockData]);
 
-  return (
-    <View style={styles.container}>
-      <SearchBar defaultText={searchText} handleSearch={FilterStock} />
-      <ScrollView>
-        {filteredStocks.map((stock) => (
-          <View key={stock.symbol} style={styles.rowStyle}>
-            <View style={styles.sybmbolDiv}>
-              <Text style={styles.symbol}>{stock.symbol}</Text>
-              <TouchableOpacity
-                style={styles.addBtn}
-                onPress={() => {
-                  addToWatchlist(stock.symbol);
-                  alert(`${stock.symbol} added to watchlist`);
-                  navigation.jumpTo("Stocks");
-                }}
-              >
-                <Text style={styles.btnText}> + </Text>
-              </TouchableOpacity>
+  if (loading) {
+    return <GetLoadingPage />;
+  } else {
+    return (
+      <View style={styles.container}>
+        <SearchBar defaultText={searchText} handleSearch={FilterStock} />
+        <ScrollView>
+          {filteredStocks.map((stock) => (
+            <View key={stock.symbol} style={styles.rowStyle}>
+              <View style={styles.sybmbolDiv}>
+                <Text style={styles.symbol}>{stock.symbol}</Text>
+                <TouchableOpacity
+                  style={styles.addBtn}
+                  onPress={() => {
+                    addToWatchlist(stock.symbol);
+                    alert(`${stock.symbol} added to watchlist`);
+                    navigation.jumpTo("Stocks");
+                  }}
+                >
+                  <Text style={styles.btnText}> + </Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.name}>{stock.name}</Text>
+              <View style={styles.space} />
             </View>
-            <Text style={styles.name}>{stock.name}</Text>
-            <View style={styles.space} />
-          </View>
-        ))}
-      </ScrollView>
-    </View>
-  );
+          ))}
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -121,11 +121,12 @@ export default function LoginScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
           {/* redirect to register screen */}
-          <Button
-            title="Create an Account"
-            onPress={() => navigation.navigate("Register")}
-            color="white"
-          />
+
+          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+            <Text style={{ color: "white", fontSize: 15 }}>
+              Create an Account
+            </Text>
+          </TouchableOpacity>
         </View>
       </ImageBackground>
     </View>

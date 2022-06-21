@@ -1,17 +1,11 @@
-import {
-  LineChart,
-  BarChart,
-  PieChart,
-  ProgressChart,
-  ContributionGraph,
-  StackedBarChart,
-} from "react-native-chart-kit";
+import { LineChart } from "react-native-chart-kit";
 import {
   StyleSheet,
   View /* include other react-native components here as needed */,
   Text,
   Dimensions,
 } from "react-native";
+
 export default function InfoChart(props) {
   let dateLabel = [];
   props.rowData.map((x) => {

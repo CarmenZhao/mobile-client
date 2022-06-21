@@ -5,6 +5,7 @@ import StocksScreen from "../screens/StocksScreen";
 import SearchScreen from "../screens/SearchScreen";
 import AccountScreen from "../screens/AccountScreen";
 import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
+import { GetModal } from "../components/modal";
 
 const BottomTab = createBottomTabNavigator();
 const INITIAL_ROUTE_NAME = "Search";
@@ -20,7 +21,8 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Stocks"
         component={StocksScreen}
         options={{
-          title: "Stocks",
+          headerTitle: "My Watchlist",
+          headerRight: () => <GetModal />,
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-trending-up" />
           ),
@@ -30,7 +32,7 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Search"
         component={SearchScreen}
         options={{
-          title: "Search",
+          headerTitle: "",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-search" />
           ),
@@ -40,7 +42,6 @@ export default function BottomTabNavigator({ navigation, route }) {
         name="Account"
         component={AccountScreen}
         options={{
-          title: "Account",
           tabBarIcon: ({ focused }) => (
             <TabBarIcon focused={focused} name="md-person-circle" />
           ),

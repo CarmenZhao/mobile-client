@@ -15,7 +15,6 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import StockDetailCard from "../components/StockDetailCard";
 import { GetLoadingPage } from "../components/loading";
 import { render } from "react-dom";
-//
 
 export default function StocksScreen({ route }) {
   const { ServerURL, watchList, removeFromWatchlist } = useStocksContext();
@@ -26,21 +25,14 @@ export default function StocksScreen({ route }) {
   //const { loading2, priceData, changeData, error } = getPrice(watchList);
   const [allSymbol, setAllSymbol] = useState([]);
   const [allSymbolData, setSymbolData] = useState([]);
-  const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
+  //const API_KEY = "5eb49566d020d9a874bb1c9ca820370a";
+  const API_KEY = "9bdf814120dd203b072c0828821bd0e2";
   const [loading, setLoading] = useState(true);
 
-  // if (loading) {
-  //   return <Text>loading</Text>;
-  // }
-  // if (error != null) {
-  //   return <Text>Error</Text>;
-  // }
-
+  //everything when the user add a new stock into the watchlist
+  //the system will get all the price and change of the symbol of the watchlist
+  //for stock screen
   useEffect(() => {
-    // const newlyAddedSymbols = watchList.filter(
-    //   (symbol) => !myList.some((stock) => stock.symbol === symbol)
-    // ); // get new symbols added to the watchlist
-    // console.log(newlyAddedSymbols);
     let tempList = [];
     Promise.all(
       watchList.map((stockSymbol) =>
@@ -76,7 +68,7 @@ export default function StocksScreen({ route }) {
         console.log(error);
       });
   }, [watchList]);
-
+  //return loading page when data is not gathering completely
   if (loading) {
     return <GetLoadingPage />;
   } else {
@@ -110,7 +102,7 @@ export default function StocksScreen({ route }) {
                   <View
                     style={{ flexDirection: "column", alignItems: "flex-end" }}
                   >
-                    <Text style={styles.price}>{e.price}</Text>
+                    <Text style={styles.price}>${e.price}</Text>
                     <View
                       style={e.change > 0 ? styles.badgeGreen : styles.badgeRed}
                     >
@@ -177,45 +169,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginHorizontal: scaleSize(20),
     marginTop: scaleSize(10),
-    // padding: scaleSize(10),
     borderBottomColor: "#E4E8ED",
     borderBottomWidth: scaleSize(1),
   },
 
-  stockItemRightContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-
   symbol: {
     flex: 1,
-    //paddingHorizontal: scaleSize(10),
     paddingTop: scaleSize(26),
     paddingBottom: scaleSize(10),
     fontSize: scaleSize(30),
     color: "black",
-  },
-
-  closingPrice: {
-    color: "black",
-    fontSize: scaleSize(20),
-    marginRight: scaleSize(20),
-  },
-
-  percentageGainOrLossContainer: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    alignItems: "center",
-
-    width: scaleSize(100),
-    height: scaleSize(35),
-    borderRadius: scaleSize(10),
-  },
-
-  percentageGainOrLoss: {
-    color: "black",
-    fontSize: scaleSize(20),
-    paddingRight: scaleSize(5),
   },
 
   // start of stock detail css
@@ -224,42 +187,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#202122",
   },
 
-  stockHeader: {
-    flex: 2,
-    justifyContent: "center",
-    alignItems: "center",
-    borderBottomWidth: scaleSize(0.5),
-    borderBottomColor: "#BCBCBC",
-  },
-
-  stockName: {
-    color: "black",
-    fontSize: scaleSize(20),
-  },
-
-  stockDetailRow: {
-    flex: 1,
-    flexDirection: "row",
-    borderBottomWidth: scaleSize(1),
-    borderBottomColor: "#404142",
-  },
-
-  stockProperty: {
-    flex: 1, // get 1/(1+1) => 1/2 space
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: scaleSize(3),
-  },
-
-  stockPropertyName: {
-    color: "#616263",
-  },
-
-  stockPropertyValue: {
-    color: "black",
-    fontSize: scaleSize(15),
-  },
   price: {
     fontSize: scaleSize(20),
   },

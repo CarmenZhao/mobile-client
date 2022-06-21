@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ImageBackground } from "react-native";
+import { View, Text, ImageBackground, Image } from "react-native";
 
 export function GetLoadingPage() {
   return (
@@ -23,6 +23,17 @@ export function GetLoadingPage() {
           </Text>
         </View>
       </ImageBackground>
+    </View>
+  );
+}
+export function GetLoadingText() {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <Image
+        source={require("../assets/images/loading2.png")}
+        style={{ width: "50%", height: "50%" }}
+      ></Image>
+      <Text style={{ fontSize: 20 }}>Loading....</Text>
     </View>
   );
 }

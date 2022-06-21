@@ -3,19 +3,21 @@ import { List, Card } from "react-native-paper";
 import InfoChart from "../components/Chart";
 import { UseStockData, GetStockDetails } from "../api2";
 import { CurrentRenderContext } from "@react-navigation/core";
+import { GetLoadingText } from "./loading";
+import { scaleSize } from "../constants/Layout";
 
 export default function StockDetailCard(props) {
   const { loading, rowData, error } = UseStockData(props.Symbol);
   const { loading2, compData, error2 } = GetStockDetails(props.Symbol);
-  console.log(compData);
+
   const dataChange = parseFloat(compData.changesPercentage).toFixed(2);
   const vol = kFormatter(compData.volume);
   const MC = kFormatter(compData.mktCap);
 
-  if (loading && loading2) {
-    return <Text>loading</Text>;
+  if (loading || loading2) {
+    return <GetLoadingText />;
   }
-  if (error != null && error2 != null) {
+  if (error != null || error2 != null) {
     return <Text>Error</Text>;
   }
   function kFormatter(num) {
@@ -100,11 +102,7 @@ export default function StockDetailCard(props) {
             title={"eps  " + compData.eps}
             // right={(props) => <Text>{props.data.open}</Text>}
             left={(props) => (
-              <List.Icon
-                {...props}
-                icon="trending-up"
-                style={styles.iconStyle}
-              />
+              <List.Icon {...props} icon="finance" style={styles.iconStyle} />
             )}
           />
 
@@ -112,7 +110,11 @@ export default function StockDetailCard(props) {
             style={styles.listStyle}
             title={"Vol. " + vol}
             left={(props) => (
-              <List.Icon {...props} icon="arrow-up" style={styles.iconStyle} />
+              <List.Icon
+                {...props}
+                icon="chart-line"
+                style={styles.iconStyle}
+              />
             )}
           />
           <List.Item
@@ -120,11 +122,7 @@ export default function StockDetailCard(props) {
             title={"Mkt Cap " + MC}
             // right={props.data.dayLow}
             left={(props) => (
-              <List.Icon
-                {...props}
-                icon="arrow-down"
-                style={styles.iconStyle}
-              />
+              <List.Icon {...props} icon="adjust" style={styles.iconStyle} />
             )}
           />
         </View>
@@ -142,10 +140,10 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   ComName: {
-    // fontFamily: "arial",
+    fontFamily: "Helvetica-Bold",
     // fontStyle: "Bold",
     // fontWeight: 800,
-    fontSize: 26,
+    fontSize: scaleSize(20),
     lineHeight: 30,
     color: "#000000",
     marginStart: 30,

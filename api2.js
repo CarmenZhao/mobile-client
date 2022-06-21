@@ -10,8 +10,9 @@ export function UseStockData(Symbol) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rowData, setRowData] = useState([]);
-  // const [compData, setCompData] = useState([]);
 
+  //this function will fetch 100 days's open price of a company
+  //for chart purpose
   async function fetchStockInfo() {
     let res = await fetch(
       `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${Symbol}&apikey=${API_KEY1}`
@@ -22,16 +23,11 @@ export function UseStockData(Symbol) {
     data = Object.entries(data)[1][1];
 
     let records = Object.entries(data);
-    // let history = await data.historical;
 
     return records.map((company) => {
       return {
         date: company[0],
         open: company[1]["1. open"],
-        // high: company[1]["2. high"],
-        // low: company[1]["3. low"],
-        // close: company[1]["4. close"],
-        // volume: company[1]["5. volume"],
       };
     });
   }
@@ -51,6 +47,7 @@ export function UseStockData(Symbol) {
   return { loading, rowData, error };
 }
 
+//this function will get the details information of the company for bottom sheet info
 export function GetStockDetails(Symbol) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -91,82 +88,4 @@ export function GetStockDetails(Symbol) {
   }, []);
 
   return { loading, compData, error };
-}
-
-export function getPrice(list) {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [priceData, setPriceData] = useState([]);
-  const [changeData, setChangeData] = useState([]);
-
-  // let allSymbol = list.join(",");
-  // console.log("before" + allSymbol);
-  // console.log(
-  //   `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
-  // );
-
-  async function fetchPriceInfo() {
-    let allSymbol = list.join(",");
-    let res = await fetch(
-      `https://financialmodelingprep.com/api/v3/otc/real-time-price/${allSymbol}?apikey=${API_KEY_SUS}`
-    );
-
-    let company = await res.json();
-    return company.map((c) => {
-      let Symbol = c.symbol;
-      let Price = c.prevClose;
-      return {
-        symbol: Symbol,
-        price: Price,
-      };
-    });
-  }
-
-  async function fetchChangeInfo() {
-    let allSymbol = list.join(",");
-    let res = await fetch(
-      `https://financialmodelingprep.com/api/v3/stock-price-change/${allSymbol}?apikey=${API_KEY}`
-    );
-
-    let company = await res.json();
-
-    return company.map((c) => {
-      let Symbol = c.symbol;
-      let tmpArr = Object.values(c);
-      let Change = tmpArr[1];
-
-      return {
-        symbol: Symbol,
-        change: Change,
-      };
-    });
-  }
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setPriceData(await fetchPriceInfo());
-
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setChangeData(await fetchChangeInfo());
-
-        setLoading(false);
-      } catch (err) {
-        setError(err);
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  return { loading, priceData, changeData, error };
 }
