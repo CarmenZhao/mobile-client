@@ -30,7 +30,7 @@ function AuthNavigator() {
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ headerStyle: { backgroundColor: (255, 255, 255, 0) } }}
+        options={{ headerTransparent: true, headerTintColor: "#fff" }}
       />
     </Stack.Navigator>
   );

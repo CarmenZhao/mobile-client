@@ -80,7 +80,6 @@ export default function StocksScreen({ route }) {
               <Pressable
                 key={e.symbol}
                 onPress={() => {
-                  console.log(allSymbol);
                   refRBSheet.current.open();
                   setSymbol(e.symbol);
                 }}
@@ -128,7 +127,7 @@ export default function StocksScreen({ route }) {
           <RBSheet
             animationType={"slide"}
             ref={refRBSheet}
-            closeOnDragDown={true}
+            // closeOnDragDown={true}
             closeOnPressMask={true}
             height={windowHeight / 1.2}
             customStyles={{

@@ -16,7 +16,11 @@ export default function BottomTabNavigator({ navigation, route }) {
   }, [navigation, route]);
 
   return (
-    <BottomTab.Navigator initialRouteName={INITIAL_ROUTE_NAME}>
+    <BottomTab.Navigator
+      initialRouteName={INITIAL_ROUTE_NAME}
+      activeColor="red"
+      inactiveColor="black"
+    >
       <BottomTab.Screen
         name="Stocks"
         component={StocksScreen}

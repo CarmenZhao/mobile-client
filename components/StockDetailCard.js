@@ -1,23 +1,28 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { List, Card } from "react-native-paper";
 import InfoChart from "../components/Chart";
 import { UseStockData, GetStockDetails } from "../api2";
 import { CurrentRenderContext } from "@react-navigation/core";
 import { GetLoadingText } from "./loading";
 import { scaleSize } from "../constants/Layout";
+import { MyTable } from "./table";
+import { ScrollView } from "react-native-gesture-handler";
+import { GetNews } from "./GetNews";
+import { NewsCard } from "./NewsCard";
 
 export default function StockDetailCard(props) {
   const { loading, rowData, error } = UseStockData(props.Symbol);
   const { loading2, compData, error2 } = GetStockDetails(props.Symbol);
+  const { loading3, newsData, error3 } = GetNews(props.Symbol);
 
   const dataChange = parseFloat(compData.changesPercentage).toFixed(2);
   const vol = kFormatter(compData.volume);
   const MC = kFormatter(compData.mktCap);
 
-  if (loading || loading2) {
+  if (loading || loading2 || loading3) {
     return <GetLoadingText />;
   }
-  if (error != null || error2 != null) {
+  if (error != null || error2 != null || error3 != null) {
     return <Text>Error</Text>;
   }
   function kFormatter(num) {
@@ -59,73 +64,17 @@ export default function StockDetailCard(props) {
       <View style={{ marginHorizontal: 20 }}>
         <InfoChart rowData={rowData} />
       </View>
-
-      <View style={styles.container}>
-        <View style={styles.cards}>
-          <List.Item
-            style={styles.listStyle}
-            title={"Open  " + compData.open}
-            // right={(props) => <Text>{props.data.open}</Text>}
-            left={(props) => (
-              <List.Icon
-                {...props}
-                icon="trending-up"
-                style={styles.iconStyle}
-              />
-            )}
-          />
-
-          <List.Item
-            style={styles.listStyle}
-            title={"High " + compData.dayHigh}
-            left={(props) => (
-              <List.Icon {...props} icon="arrow-up" style={styles.iconStyle} />
-            )}
-          />
-          <List.Item
-            style={styles.listStyle}
-            title={"Low " + compData.dayLow}
-            // right={props.data.dayLow}
-            left={(props) => (
-              <List.Icon
-                {...props}
-                icon="arrow-down"
-                style={styles.iconStyle}
-              />
-            )}
-          />
-        </View>
-        <View style={styles.verticleLine}></View>
-        <View style={styles.cards}>
-          <List.Item
-            style={styles.listStyle}
-            title={"eps  " + compData.eps}
-            // right={(props) => <Text>{props.data.open}</Text>}
-            left={(props) => (
-              <List.Icon {...props} icon="finance" style={styles.iconStyle} />
-            )}
-          />
-
-          <List.Item
-            style={styles.listStyle}
-            title={"Vol. " + vol}
-            left={(props) => (
-              <List.Icon
-                {...props}
-                icon="chart-line"
-                style={styles.iconStyle}
-              />
-            )}
-          />
-          <List.Item
-            style={styles.listStyle}
-            title={"Mkt Cap " + MC}
-            // right={props.data.dayLow}
-            left={(props) => (
-              <List.Icon {...props} icon="adjust" style={styles.iconStyle} />
-            )}
-          />
-        </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "flex-start",
+          alignItems: "flex-start",
+          flexWrap: "wrap",
+        }}
+      >
+        <MyTable compData={compData} style={{ marginHorizontal: 20 }} />
+        {newsData != null ? <NewsCard data={newsData} /> : <Text>No news</Text>}
+        {/* <NewsCard data={newsData} /> */}
       </View>
     </ScrollView>
   );
@@ -143,7 +92,8 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     // fontStyle: "Bold",
     // fontWeight: 800,
-    fontSize: scaleSize(20),
+    fontSize: 20,
+    //fontSize: scaleSize(20),
     lineHeight: 30,
     color: "#000000",
     marginStart: 30,

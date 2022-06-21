@@ -38,13 +38,11 @@ export function GetModal() {
           }}
         >
           <View style={{ flex: 1, padding: 20, alignItems: "center" }}>
-            <Text style={{ fontFamily: "Helvetica-Bold" }}>
-              How to use Stock Genius
-            </Text>
+            <Text style={{ fontFamily: "Helvetica-Bold" }}>User Guide</Text>
             <Text>
               {"\n"}1. Single tab to view detail information of the stcok
             </Text>
-            <Text>2. long press to remove the stock from your watchList</Text>
+            <Text>2. long press to remove the stock from your watchlist</Text>
 
             <IconButton icon="close" size={20} onPress={toggleModal} />
           </View>

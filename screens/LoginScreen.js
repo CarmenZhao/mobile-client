@@ -53,80 +53,83 @@ export default function LoginScreen({ navigation }) {
         source={require("../assets/images/logbg.png")}
         style={{ width: "100%", height: "100%" }}
       >
-        <View style={{ flex: 2, justifyContent: "flex-end" }}>
-          <Text
-            style={{
-              fontFamily: "HelveticaNeue-Bold",
-              fontSize: scaleSize(40),
-              color: "white",
-              textAlign: "center",
-              marginVertical: 10,
-            }}
-          >
-            Hello!
-          </Text>
-          <Text
-            style={{
-              fontFamily: "HelveticaNeue",
-              fontSize: scaleSize(15),
-              color: "white",
-              textAlign: "center",
-            }}
-          >
-            Welcome to Stock Genius
-          </Text>
-        </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "column",
-            justifyContent: "flex-end",
-            alignItems: "center",
-            marginTop: -30,
-          }}
-        >
-          <TextInput
-            left={<TextInput.Icon name="email" color="#FEFFFE" size="20" />}
-            style={styles.emailInput}
-            onChangeText={setInputEmail}
-            value={inputEmail}
-            placeholder="Email"
-          />
-
-          <TextInput
-            left={<TextInput.Icon name="key" color="#FEFFFE" size="20" />}
-            style={styles.pwInput}
-            onChangeText={setInputPassword}
-            value={inputPassword}
-            secureTextEntry
-            placeholder="Password"
-          />
-        </View>
-        <View
-          style={{
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity onPress={login} style={styles.btn}>
+        <View style={{ flex: 1 }}>
+          <View style={{ flex: 2, justifyContent: "flex-end" }}>
             <Text
               style={{
-                textAlign: "center",
-                color: "white",
                 fontFamily: "HelveticaNeue-Bold",
+                fontSize: scaleSize(40),
+                color: "white",
+                textAlign: "center",
+                marginVertical: 10,
+                alignContent: "flex-end",
               }}
             >
-              Login
+              Hello!
             </Text>
-          </TouchableOpacity>
-          {/* redirect to register screen */}
+            <Text
+              style={{
+                fontFamily: "HelveticaNeue",
+                fontSize: scaleSize(15),
+                color: "white",
+                textAlign: "center",
+                alignContent: "flex-end",
+              }}
+            >
+              Welcome to Stock Genius
+            </Text>
+          </View>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            <TextInput
+              left={<TextInput.Icon name="email" color="#FEFFFE" size="20" />}
+              style={styles.emailInput}
+              onChangeText={setInputEmail}
+              value={inputEmail}
+              placeholder="Email"
+            />
 
-          <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-            <Text style={{ color: "white", fontSize: 15 }}>
-              Create an Account
-            </Text>
-          </TouchableOpacity>
+            <TextInput
+              left={<TextInput.Icon name="key" color="#FEFFFE" size="20" />}
+              style={styles.pwInput}
+              onChangeText={setInputPassword}
+              value={inputPassword}
+              secureTextEntry
+              placeholder="Password"
+            />
+          </View>
+          <View
+            style={{
+              flex: 2,
+              alignItems: "center",
+              justifyContent: "flexStart",
+            }}
+          >
+            <TouchableOpacity onPress={login} style={styles.btn}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontFamily: "HelveticaNeue-Bold",
+                }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+            {/* redirect to register screen */}
+
+            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+              <Text style={{ color: "white", fontSize: 15, marginTop: 30 }}>
+                Create an Account
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </ImageBackground>
     </View>
@@ -178,8 +181,9 @@ const styles = StyleSheet.create({
   },
   btn: {
     alignItems: "center",
+
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: 30,
     backgroundColor: "#FFB429",
     width: scaleSize(290),
     height: scaleSize(45),

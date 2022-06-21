@@ -64,7 +64,7 @@ export default function AccountScreen({ navigation }) {
             fontFamily: "HelveticaNeue-Bold",
           }}
         >
-          logout
+          Logout
         </Text>
       </TouchableOpacity>
     </View>

@@ -1,46 +1,55 @@
 import * as React from "react";
-import { DataTable } from "react-native-paper";
+import { DataTable, List } from "react-native-paper";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 
-const optionsPerPage = [2, 3, 4];
+//const optionsPerPage = [2, 3, 4];
 
-const MyComponent = () => {
-  const [page, setPage] = React.useState < number > 0;
-  const [itemsPerPage, setItemsPerPage] = React.useState(optionsPerPage[0]);
-
-  React.useEffect(() => {
-    setPage(0);
-  }, [itemsPerPage]);
+export function MyTable(props) {
+  function kFormatter(num) {
+    if (num >= 1000000000) {
+      return (num / 1000000000).toFixed(1).replace(/\.0$/, "") + "G";
+    }
+    if (num >= 1000000) {
+      return (num / 1000000).toFixed(1).replace(/\.0$/, "") + "M";
+    }
+    if (num >= 1000) {
+      return (num / 1000).toFixed(1).replace(/\.0$/, "") + "K";
+    }
+    return num;
+  }
+  const windowWidth = Dimensions.get("window").width;
+  const vol = kFormatter(props.compData.volume);
+  const MC = kFormatter(props.compData.mktCap);
 
   return (
     <DataTable>
-      <DataTable.Header>
-        <DataTable.Title>Type</DataTable.Title>
-        <DataTable.Title numeric>value</DataTable.Title>
-      </DataTable.Header>
-
       <DataTable.Row>
-        <DataTable.Cell>Frozen yogurt</DataTable.Cell>
-        <DataTable.Cell numeric>159</DataTable.Cell>
+        <DataTable.Cell>Open</DataTable.Cell>
+        <DataTable.Cell numeric>{props.compData.open} </DataTable.Cell>
+        <DataTable.Cell style={{ marginLeft: 8 }}> eps</DataTable.Cell>
+        <DataTable.Cell numeric>{props.compData.eps}</DataTable.Cell>
       </DataTable.Row>
 
       <DataTable.Row>
-        <DataTable.Cell>Ice cream sandwich</DataTable.Cell>
-        <DataTable.Cell numeric>237</DataTable.Cell>
+        <DataTable.Cell>High</DataTable.Cell>
+        <DataTable.Cell numeric>{props.compData.dayHigh} </DataTable.Cell>
+        <DataTable.Cell style={{ marginLeft: 8 }}> Vol.</DataTable.Cell>
+        <DataTable.Cell numeric>{vol}</DataTable.Cell>
       </DataTable.Row>
 
-      <DataTable.Pagination
-        page={page}
-        numberOfPages={3}
-        onPageChange={(page) => setPage(page)}
-        label="1-2 of 6"
-        optionsPerPage={optionsPerPage}
-        itemsPerPage={itemsPerPage}
-        setItemsPerPage={setItemsPerPage}
-        showFastPagination
-        optionsLabel={"Rows per page"}
-      />
+      <DataTable.Row>
+        <DataTable.Cell>Low</DataTable.Cell>
+        <DataTable.Cell numeric>{props.compData.dayLow} </DataTable.Cell>
+        <DataTable.Cell style={{ marginLeft: 8 }}> Mkt Cap</DataTable.Cell>
+        <DataTable.Cell numeric>{MC}</DataTable.Cell>
+      </DataTable.Row>
+
+      <DataTable.Pagination />
     </DataTable>
   );
-};
-
-export default MyComponent;
+}
+const styles = StyleSheet.create({
+  iconStyle: {
+    marginRight: -10,
+  },
+});

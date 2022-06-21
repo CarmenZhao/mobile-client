@@ -20,8 +20,9 @@ export default function SearchScreen({ navigation }) {
   const [filteredStocks, setFilteredStocks] = useState([]);
 
   const FilterStock = (text) => {
-    let temp = allStocks.filter((stock) =>
-      RegExp(text, "i").test(stock.symbol)
+    let temp = allStocks.filter(
+      (stock) => RegExp(text, "i").test(stock.name)
+      //RegExp(text, "i").test(stock.name);
     );
     setFilteredStocks(temp);
   };
